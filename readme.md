@@ -100,7 +100,7 @@ The `launchModal` function expects the following arguments:
 | Argument | Type | Description |
 |----------|------|-------------|
 | render | `React.FC` | A function that renders the modal and returns a `ReactNode`. |
-| resolvers | `{ [key: string]: (ev?: SyntheticEvent) => Promise<any>|void }` | An object of resolver functions that will be passed as props to `render`. |
+| resolvers | `{ [key: string]: (ev?: SyntheticEvent) => Promise<any>\|void }` | An object of resolver functions that will be passed as props to `render`. |
 | onBackdropClickUse | `string` | Optional: The key of the resolver function in the `resolvers` object that should be passed to the backdrop component’s `onBackdropClick` prop. |
 
 Modals can be created and designed to fully fit your needs. The only requirement is to define the functions to resolve them, for example, when clicking a button. The modal component for the example above could look like this:
