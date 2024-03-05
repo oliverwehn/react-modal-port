@@ -11,7 +11,7 @@ This small but neat package allows you to:
 $ npm install react-modal-port
 ```
 
-## Components
+## 🧩 Components
 
 ### ModalContextProvider
 
@@ -50,7 +50,7 @@ const App:React.FC<PropsWithChildren> = ({ children }) => (
 );
 ```
 
-## Launching Modals
+## 🚀 Launching Modals
 
 Launching modals makes use of a custom hook that provides you with the `launchModal` function.
 
@@ -130,7 +130,7 @@ const DecisionModal: React.FC<DecisionModalProps> = ({
 export default DecisionModal;
 ```
 
-## Asynchronous Resolution
+## 🔂 Asynchronous Resolution
 
 Modals can be simple like the one above or highly complex like a full wizard experience or questionnaire. It is also possible to trigger asynchronous operations within a resolver function. As long as the resolver function returns a promise, the modal won’t close until the promise is resolved.
 
@@ -202,7 +202,7 @@ const DecisionModal: React.FC<DecisionModalProps> = ({
 export default DecisionModal;
 ```
 
-## Stacking modals
+## 🥞 Stacking modals
 
 If you need to launch a modal from a modal, the modals become (logically) stacked. That means that the `ModalPort` will always render the modal at the top of the modal stack and will return to the previous one as soon as the current one is resolved. Via the resolver functions, data can be passed from the resolving modal to the modal it was launched from.
 
