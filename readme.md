@@ -179,7 +179,10 @@ const DecisionModal: React.FC<DecisionModalProps> = ({
   const imUndecided = () => {
     const p = new Promise((resolve) => {
       const options = [ decideYay, decideNay ];
-      resolve(options[Math.round(Math.random())]);
+      setTimeout(
+        () => resolve(options[Math.round(Math.random())]),
+        Math.random() * 60000
+      );
     });
     letMeThinkAboutIt(p);
   };
