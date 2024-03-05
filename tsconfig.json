@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+      "lib": ["dom", "dom.iterable", "esnext"],
+      "outDir": "./dist/",
+      "sourceMap": true,
+      "strict": true,
+      "noImplicitReturns": true,
+      "noImplicitAny": true,
+      "esModuleInterop": true,
+      "module": "esnext",
+      "moduleResolution": "bundler",
+      "target": "es5",
+      "allowJs": true,
+      "jsx": "preserve",
+      "paths": {
+        "@/*": ["./src/*"]
+      },
+      "rootDir": "./src",
+  },
+  "include": [
+      "./src/**/*.ts",
+      "./src/**/*.tsx",
+  ],
+  "exclude": ["node_modules"]
+
+}

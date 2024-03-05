@@ -1,0 +1,55 @@
+{
+  "name": "react-modal-port",
+  "version": "1.0.0",
+  "description": "Launch modals from any React component.",
+  "main": "index.js",
+  "type": "module",
+  "types": "src/types/globals.d.ts",
+  "scripts": {
+    "build": "npx rollup -c",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oliverwehn/react-modal-port.git"
+  },
+  "tags": [
+    "react",
+    "modal",
+    "dialog"
+  ],
+  "keywords": [
+    "react",
+    "react-component",
+    "modal",
+    "dialog"
+  ],
+  "author": "Oliver Greuter-Wehn",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/oliverwehn/react-modal-port/issues"
+  },
+  "homepage": "https://github.com/oliverwehn/react-modal-port#readme",
+  "devDependencies": {
+    "@babel/preset-react": "^7.23.3",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@types/react": "^18",
+    "@types/react-dom": "^18.2.19",
+    "react": "^18.2.0",
+    "react-dom": "^18",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "@types/react": "^18",
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "dependencies": {
+    "rollup": "^4.12.0"
+  }
+}
