@@ -21,6 +21,8 @@ The `ModalContextProvider` wraps your app to allow your app’s components to la
 
 The `ModalPort` handles the rendering of your modals. It leaves the *how* you want to render your modals fully up to you. It simply requires a `React.FunctionComponent` to be passed to it via its `render` prop. This component allows you to wrap any rendered modal in, for example, a backdrop component.
 
+Besides `children` a prop `onBackdropClick` is passed to `render`. It holds, if provided to the modal on launch, the click handler function that should be called if the backdrop is clicked, e.g. to dismiss the modal.
+
 
 ```tsx
 import React from 'react';
@@ -94,6 +96,12 @@ const Page: React.FC = () => {
 }
 
 ```
+The `launchModal` function expects the following arguments:
+| Argument | Type | Description |
+|----------|------|-------------|
+| render | `React.FC` | A function that renders the modal and returns a `ReactNode`. |
+| resolvers | `{ [key: string]: (ev?: SyntheticEvent) => Promise<any>|void }` | An object of resolver functions that will be passed as props to `render`. |
+| onBackdropClickUse | `string` | Optional: The key of the resolver function in the `resolvers` object that should be passed to the backdrop component’s `onBackdropClick` prop. |
 
 Modals can be created and designed to fully fit your needs. The only requirement is to define the functions to resolve them, for example, when clicking a button. The modal component for the example above could look like this:
 

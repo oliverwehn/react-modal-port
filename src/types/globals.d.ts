@@ -3,7 +3,7 @@ import { PropsWithChildren, SyntheticEvent } from "react";
 declare global {
 
   type LaunchModalResolvers = {
-    [key: string]: (ev?: SyntheticEvent) => Promise<any>;
+    [key: string]: (ev?: SyntheticEvent) => Promise<any>|void;
   };
 
  type ModalStackItem = {
