@@ -1,7 +1,7 @@
 # react-modal-port
 
 This small but neat package allows you to:
-* Launch modals from flexibly from anywhere in your React app.
+* Launch modals flexibly from anywhere in your React app.
 * Render them at a clearly defined place in your DOM.
 * Fully control how your modals appear and behave.
 
