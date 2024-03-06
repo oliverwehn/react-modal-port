@@ -1,42 +1,19 @@
 {
-  "files": [
-      "src/types/globals.d.ts",
-      "src/index.ts",
-      "src/modal-port.tsx",
-      "src/context.tsx"
-  ],
-  "references": [
-    { "path": "tsconfig.esm.json" },
-    { "path": "tsconfig.cjs.json" }
-  ],
-  "exclude": ["node_modules"],
-
   "compilerOptions": {
-    "incremental": true,
-    "tsBuildInfoFile": ".Cache/tsc.buildinfo.json",
-    "allowSyntheticDefaultImports": true,
-    "jsx": "preserve",
+    "target": "es5",
+    "module": "ESNext",
+    "lib": ["dom", "esnext"],
+    "declaration": false,
+    "outDir": "./dist",
+    "rootDir": "./src",
     "moduleResolution": "node",
-    "importHelpers": true,
-    "declaration": true,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "declarationDir": "dist/types",
-    "emitDeclarationOnly": true,
-    "listEmittedFiles": true
-    // "listEmittedFiles": true,
-      // "declaration": true,
-      // "declarationDir": "dist/types",
-      // "outDir": "dist/",
-      // "sourceMap": true,
-      // "strict": true,
-      // "noImplicitReturns": true,
-      // "noImplicitAny": true,
-      // "module": "esnext",
-      // "moduleResolution": "bundler",
-      // "target": "es5",
-      // "allowJs": true,
-      // "paths": {
-      //   "@/*": ["src/*"]
-      // },
-  }
+    "strict": true,
+    "jsx": "react-jsx",
+    "skipLibCheck": true,
+    "listEmittedFiles": true,
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules", "dist"]
 }

@@ -3,13 +3,21 @@
   "version": "1.0.0",
   "description": "Launch modals from any React component.",
   "type": "module",
-  "types": "./dist/types",
+  "types": "./dist/types/index.d.ts",
+  "main": "./dist/cjs/index.cjs",
+  "module": "./dist/esm/index.mjs",
   "exports": {
     "import": "./dist/esm/index.mjs",
     "require": "./dist/cjs/index.cjs"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "npx rollup -c",
+    "build": "npm run build:esm && npm run build:cjs && npm run build:types",
+    "build:esm": "tsc --outDir dist/esm --module esnext",
+    "build:cjs": "tsc --outDir dist/cjs --module commonjs",
+    "build:types": "tsc --declaration --emitDeclarationOnly --outDir dist/types",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -34,18 +42,10 @@
   },
   "homepage": "https://github.com/oliverwehn/react-modal-port#readme",
   "devDependencies": {
-    "@babel/preset-react": "^7.23.3",
-    "@rollup/plugin-babel": "^6.0.4",
-    "@rollup/plugin-commonjs": "^25.0.7",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-terser": "^0.4.4",
-    "@rollup/plugin-typescript": "^11.1.6",
     "@types/react": "^18",
     "@types/react-dom": "^18.2.19",
     "react": "^18.2.0",
     "react-dom": "^18",
-    "rollup-plugin-peer-deps-external": "^2.2.4",
-    "rollup-plugin-typescript2": "^0.36.0",
     "tslib": "^2.6.2",
     "typescript": "^5.3.3"
   },
@@ -53,9 +53,5 @@
     "@types/react": "^18",
     "react": "^18",
     "react-dom": "^18"
-  },
-  "dependencies": {
-    "@babel/preset-typescript": "^7.23.3",
-    "rollup": "^4.12.0"
   }
 }

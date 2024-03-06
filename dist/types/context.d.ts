@@ -1,8 +1,8 @@
 import React from 'react';
 export declare const ModalContext: React.Context<ModalContextProperties>;
 export declare const ModalContextProvider: ({ children }: Readonly<{
-    children: any;
-}>) => React.JSX.Element;
+    children: React.ReactNode;
+}>) => import("react/jsx-runtime").JSX.Element;
 /**
  * Get properties from the modal context
  * @returns {ModalContextProperties} Object with the modal context properties
