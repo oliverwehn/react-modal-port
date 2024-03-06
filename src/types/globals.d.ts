@@ -2,14 +2,16 @@ import { PropsWithChildren, SyntheticEvent } from "react";
 
 declare global {
 
+  type ModalResolver = (ev?: SyntheticEvent) => Promise<any>|void;
   type LaunchModalResolvers = {
-    [key: string]: (ev?: SyntheticEvent) => Promise<any>|void;
+    [key: string]: ModalResolver;
   };
 
  type ModalStackItem = {
     render: React.FunctionComponent<LaunchModalResolvers>;
     resolvers: LaunchModalResolvers;
     onBackdropClickUse?: string;
+    state: ModalState;
   };
 
   type LaunchModal = (
@@ -18,9 +20,14 @@ declare global {
     onBackdropClickUse?: string,
   ) => void;
 
+  type ModalState = { [key: string]: any };
+  type UpdateModalState = (newState: ModalState) => void;
+
   type ModalContextProperties = {
-    launchModal: LaunchModal;
     stack: ModalStackItem[];
+    launchModal: LaunchModal;
+    updateStack: (newStack: ModalStackItem[]) => void;
+    updateState: (newState: ModalState) => void;
   };
 
   type ModalPortRenderProps = PropsWithChildren & {

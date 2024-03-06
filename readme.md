@@ -52,7 +52,7 @@ const App:React.FC<PropsWithChildren> = ({ children }) => (
 
 ## 🚀 Launching Modals
 
-Launching modals makes use of a custom hook that provides you with the `launchModal` function.
+Launching modals makes use of the `userModal` hook that provides you with the `launchModal` function.
 
 ```tsx
 import React from 'react';
@@ -202,11 +202,54 @@ const DecisionModal: React.FC<DecisionModalProps> = ({
 export default DecisionModal;
 ```
 
-## 🥞 Stacking modals
+## 🥞 Stacking Modals
 
 If you need to launch a modal from a modal, the modals become (logically) stacked. That means that the `ModalPort` will always render the modal at the top of the modal stack and will return to the previous one as soon as the current one is resolved. Via the resolver functions, data can be passed from the resolving modal to the modal it was launched from.
 
 ```tsx
 // Add example here
+
+```
+
+## 🔢 Handle And Preserve Modal State
+
+In case you need to handle state within the modal, e.g., when modals are stacked, you can access and update modal state using the `useModalState` hook. It returns a tuple with the current modal state and a function to update the state. The modal state is always an object holding key-value pairs.
+
+```tsx
+import React from "react"; 
+import ConfirmModal from "./ConfirmModal";
+
+type AskForNameModalProps = {
+  confirmName: ModalResolver,
+};
+
+export const AskForNameModal: React.FC<AskForNameModalProps> = ({
+  confirmName,
+}) => {
+
+  const launchModal = useModal();
+  const [ modalState, updateModalState ] = useModalState();
+  const onNameChange = (ev) => {
+    updateModalState({
+      ...modalState,
+      name: ev.target.value,
+    });
+  };
+
+  const onButtonClick = () => {
+    launchModal(ConfirmModal, {
+      confirmModal,
+     });
+  };
+
+  return (
+    <div className="bg-white rounded p-4 flex flex-column gap-2 items-center">
+      <p>What’s your name?</p>
+      <input type="text" value={modalState.name} onChange={onNameChange} className="w-full">
+      <button type="button" onClick={onButtonClick}>Set name</button>
+    </div>
+  );
+
+}
 
 ```
