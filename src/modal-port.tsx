@@ -1,3 +1,7 @@
+import { 
+  type ModalPortProps, 
+  type ModalStackItem 
+} from "../types";
 import { useModalContext } from "./context";
 import { 
   type SyntheticEvent, 

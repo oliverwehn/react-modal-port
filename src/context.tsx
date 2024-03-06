@@ -2,8 +2,16 @@ import React, {
   createContext, 
   useContext, 
   useState, 
-  SyntheticEvent 
+  type SyntheticEvent 
 } from 'react';
+import { 
+  type ModalStackItem,
+  type ModalContextProperties,
+  type LaunchModal,
+  type LaunchModalResolvers,
+  type ModalState,
+  type UpdateModalState,
+} from '../types';
 
 export const ModalContext = createContext<ModalContextProperties>({
   stack: [],
