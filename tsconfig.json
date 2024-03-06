@@ -1,28 +1,42 @@
 {
-  "compilerOptions": {
-      "lib": ["dom", "dom.iterable", "esnext"],
-      "outDir": "./dist/",
-      "sourceMap": true,
-      "strict": true,
-      "noImplicitReturns": true,
-      "noImplicitAny": true,
-      "esModuleInterop": true,
-      "module": "esnext",
-      "moduleResolution": "bundler",
-      "target": "es5",
-      "allowJs": true,
-      "jsx": "preserve",
-      "paths": {
-        "@/*": ["./src/*"]
-      },
-      "rootDir": "./src",
-  },
-  "include": [
-      "./src/**/*.ts",
-      "./src/**/*.tsx",
+  "files": [
+      "src/types/globals.d.ts",
+      "src/index.ts",
+      "src/modal-port.tsx",
+      "src/context.tsx"
+  ],
+  "references": [
+    { "path": "tsconfig.esm.json" },
+    { "path": "tsconfig.cjs.json" }
   ],
   "exclude": ["node_modules"],
-  "files": [
-    "./src/types/index.d.ts"
-  ]
+
+  "compilerOptions": {
+    "incremental": true,
+    "tsBuildInfoFile": ".Cache/tsc.buildinfo.json",
+    "allowSyntheticDefaultImports": true,
+    "jsx": "preserve",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "declaration": true,
+    "forceConsistentCasingInFileNames": true,
+    "declarationDir": "dist/types",
+    "emitDeclarationOnly": true,
+    "listEmittedFiles": true
+    // "listEmittedFiles": true,
+      // "declaration": true,
+      // "declarationDir": "dist/types",
+      // "outDir": "dist/",
+      // "sourceMap": true,
+      // "strict": true,
+      // "noImplicitReturns": true,
+      // "noImplicitAny": true,
+      // "module": "esnext",
+      // "moduleResolution": "bundler",
+      // "target": "es5",
+      // "allowJs": true,
+      // "paths": {
+      //   "@/*": ["src/*"]
+      // },
+  }
 }

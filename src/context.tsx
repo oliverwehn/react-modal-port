@@ -62,7 +62,7 @@ export const ModalContextProvider = ({ children }: Readonly<{ children: React.Re
  * @returns {ModalContextProperties} Object with the modal context properties
  */
 export function useModalContext(): ModalContextProperties {
-  return useContext(ModalContext) ?? {};
+  return useContext(ModalContext);
 }
 
 /**

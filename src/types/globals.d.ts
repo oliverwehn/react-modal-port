@@ -1,46 +1,43 @@
 import { PropsWithChildren, SyntheticEvent } from "react";
 
-declare namespace ModalPort {
+declare global {
 
-  type ModalResolver = (ev?: SyntheticEvent) => Promise<any>|void;
-  type LaunchModalResolvers = {
+  export type ModalResolver = (ev?: SyntheticEvent) => Promise<any>|void;
+  export type LaunchModalResolvers = {
     [key: string]: ModalResolver;
   };
 
- type ModalStackItem = {
+ export type ModalStackItem = {
     render: React.FunctionComponent<LaunchModalResolvers>;
     resolvers: LaunchModalResolvers;
     onBackdropClickUse?: string;
     state: ModalState;
   };
 
-  type LaunchModal = (
+  export type LaunchModal = (
     render: React.FunctionComponent<LaunchModalResolvers>, 
     resolvers: LaunchModalResolvers,
     onBackdropClickUse?: string,
   ) => void;
 
-  type ModalState = { [key: string]: any };
-  type UpdateModalState = (newState: ModalState) => void;
+  export type ModalState = { [key: string]: any };
+  export type UpdateModalState = (newState: ModalState) => void;
 
-  type ModalContextProperties = {
+  export type ModalContextProperties = {
     stack: ModalStackItem[];
     launchModal: LaunchModal;
     updateStack: (newStack: ModalStackItem[]) => void;
     updateState: (newState: ModalState) => void;
   };
 
-  type ModalPortRenderProps = PropsWithChildren & {
+  export type ModalPortRenderProps = PropsWithChildren & {
     onBackdropClick?: (ev: SyntheticEvent) => void;
   };
 
-  type ModalPortProps = {
+  export type ModalPortProps = {
     onModalLaunch?: () => void | null;
     onModalClose?: () => void | null;
     render: React.FC<ModalPortRenderProps>;
   };
 
 }
-
-export = ModalPort;
-export as namespace ModalPort;

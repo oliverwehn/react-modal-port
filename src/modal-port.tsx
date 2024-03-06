@@ -1,9 +1,10 @@
-import { useModalContext } from "@/context";
-import { PropsWithChildren, SyntheticEvent, useCallback, useEffect, useMemo } from "react";
+import { useModalContext } from "./context";
 import { 
-  ModalPortProps,
-  type ModalStackItem,
-} from "./types";
+  type SyntheticEvent, 
+  useCallback, 
+  useEffect, 
+  useMemo
+} from "react";
 
 const ModalPort: React.FC<ModalPortProps> = ({
   onModalLaunch,
