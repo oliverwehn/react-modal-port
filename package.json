@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "module": "./dist/index.es.js",
   "type": "module",
-  "types": "./src/types/globals.d.ts",
+  "types": "./src/types/index.d.ts",
   "scripts": {
     "build": "npx rollup -c",
     "test": "echo \"Error: no test specified\" && exit 1"

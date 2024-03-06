@@ -1,6 +1,6 @@
 import { PropsWithChildren, SyntheticEvent } from "react";
 
-declare global {
+declare namespace ModalPort {
 
   type ModalResolver = (ev?: SyntheticEvent) => Promise<any>|void;
   type LaunchModalResolvers = {
@@ -41,3 +41,6 @@ declare global {
   };
 
 }
+
+export = ModalPort;
+export as namespace ModalPort;
