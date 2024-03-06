@@ -12,7 +12,8 @@
     "types": "./types/index.d.ts"
   },
   "files": [
-    "dist"
+    "dist",
+    "types"
   ],
   "scripts": {
     "build": "npm run build:esm && npm run build:cjs",
