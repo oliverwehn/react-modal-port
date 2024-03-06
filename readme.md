@@ -1,9 +1,9 @@
 # react-modal-port
 
 This small but neat package allows you to:
+* Define and style modals the way *you* want or need.
 * Launch modals flexibly from anywhere in your React app.
-* Render them at a clearly defined place in your DOM.
-* Fully control how your modals appear and behave.
+* Have them render at one specific place in your DOM.
 
 ## Installation
 
@@ -28,13 +28,20 @@ Besides `children` a prop `onBackdropClick` is passed to `render`. It holds, if 
 import React from 'react';
 import { ModalContextProvider } from 'react-modal-port';
 
+// Backdrop component to be passed to the `ModalPort`’s `render` prop
 const Backdrop: React.FC<ModalPortRenderProps> = ({ children, onBackdropClick }) => (
   <div
-    className="
-      fixed inset-0 z-1000
-      flex justify-center items-center
-      bg-neutral-900 bg-opacity-50
-      top-0 right-0 bottom-0 left-0
+    style="
+      position: fixed;
+      z-index: 1000,
+      display: flex;
+      justify-content: center;
+      align-items-center;
+      background-color: rgba(0,0,0,.65);
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
     "
     onClick={onBackdropClick}
   >
@@ -42,17 +49,22 @@ const Backdrop: React.FC<ModalPortRenderProps> = ({ children, onBackdropClick })
   </div>
 );
 
-const App:React.FC<PropsWithChildren> = ({ children }) => (
+// Your app’s root layout component
+const RootLayout:React.FC<PropsWithChildren> = ({ children }) => (
   <ModalContextProvider>
-    {children}
-    <ModalPort render={Backdrop} />
+    <div style="width: 100%; min-height: 100vh;">
+      {children}
+      <ModalPort render={Backdrop} />
+    </div>
   </ModalContextProvider>
 );
+
+export default RootLayout;
 ```
 
 ## 🚀 Launching Modals
 
-Launching modals makes use of the `userModal` hook that provides you with the `launchModal` function.
+Launching modals makes use of the `useModal` hook that provides you with the `launchModal` function.
 
 ```tsx
 import React from 'react';
@@ -61,7 +73,7 @@ import DecisionModal from './modals/decision';
 
 const Page: React.FC = () => {
 
-  const launchModal = userModal();
+  const launchModal = useModal();
   const [ decision, setDecision ] = useState<boolean|null>(null);
 
   const onClick = () => {
@@ -80,7 +92,7 @@ const Page: React.FC = () => {
   }
 
   return (
-    <div className="p-4">
+    <div style="padding: 4rem;">
       <h1>Welcome</h1>
       {decision === null && (
       <p>Make your decision!</p>
@@ -88,7 +100,7 @@ const Page: React.FC = () => {
       <p>Your decision is: {decision && "Yay" || "Nay"}</p>
       )}
       
-      <div className="flex flex-row gap-2">
+      <div style="display: flex; flex-direction: row; gap: 0.5rem;">
         <button type="button" onClick={onClick}>Let me decide now</button>
       </div>
     </div>
@@ -118,9 +130,18 @@ const DecisionModal: React.FC<DecisionModalProps> = ({
   decideYay,
   decideNay,
 }) => (
-  <div className="bg-white rounded p-4 flex flex-column gap-2 items-center">
-    <p>How do you decide?</p>
-    <div className="flex flex-row gap-1 justify-center">
+  <div
+    style="background-color: white; border-radius: 0.5rem; padding: 1rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;"
+    role="dialog"
+    aria-modal="true"
+    aria-labeledby="modal-title"
+    aria-describedby="modal-description"
+  >
+    <h4 id="modal-title">How do you decide?</h4>
+    <div id ="modal-description">
+      <p>Make your decision and click one of the buttons below.</p>
+    </div>
+    <div style="display: flex; flex-direction: row; gap: 0.25rem; justify-content: center;">
       <button type="button" onClick={decideYay}>Yay</button>
       <button type="button" onClick={decideNay}>Nay</button>
     </div>
@@ -134,7 +155,7 @@ export default DecisionModal;
 
 Modals can be simple like the one above or highly complex like a full wizard experience or questionnaire. It is also possible to trigger asynchronous operations within a resolver function. As long as the resolver function returns a promise, the modal won’t close until the promise is resolved.
 
-So you could adapt the `onClick` handler in our example as follows:
+So you could adapt the `onClick` handler in our earlier example as follows:
 ```tsx
   // ...
 
@@ -188,9 +209,18 @@ const DecisionModal: React.FC<DecisionModalProps> = ({
   };
 
   return (
-    <div className="bg-white rounded p-4 flex flex-column gap-2 items-center">
-      <p>How do you decide?</p>
-      <div className="flex flex-row gap-1 justify-center">
+    <div
+      style="background-color: white; border-radius: 0.5rem; padding: 1rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;"
+      role="dialog"
+      aria-modal="true"
+      aria-labeledby="modal-title"
+      aria-describedby="modal-description"
+    >
+      <h4 id="modal-title">How do you decide?</h4>
+      <div id ="modal-description">
+        <p>Make your decision and click one of the buttons below.</p>
+      </div>
+      <div style="display: flex; flex-direction: row; gap: 0.25rem; justify-content: center;">
         <button type="button" onClick={decideYay}>Yay</button>
         <button type="button" onClick={decideNay}>Nay</button>
         <button type="button" onClick={imUndecided}>Let me think</button>
@@ -243,9 +273,18 @@ export const AskForNameModal: React.FC<AskForNameModalProps> = ({
   };
 
   return (
-    <div className="bg-white rounded p-4 flex flex-column gap-2 items-center">
-      <p>What’s your name?</p>
-      <input type="text" value={modalState.name} onChange={onNameChange} className="w-full">
+    <div 
+      style="background-color: white; border-radius: 0.5rem; padding: 1rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;"
+      role="dialog"
+      aria-modal="true"
+      aria-labeledby="modal-title"
+      aria-describedby="modal-description"
+    >
+      <h4 id="modal-title">How should we call you?</h4>
+      <div id="modal-description">
+        <p>Please enter your firstname or nickname of choice.</p>
+      </div>
+      <input type="text" value={modalState.name} onChange={onNameChange} style="width: 100%">
       <button type="button" onClick={onButtonClick}>Set name</button>
     </div>
   );
