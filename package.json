@@ -3,12 +3,15 @@
   "version": "0.1.1",
   "description": "Launch modals from any React component.",
   "type": "module",
-  "types": "./types/index.d.ts",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
+  "source": "src/index.ts",
+  "types": "types/index.d.ts",
+  "main": "dist/cjs/index.cjs",
+  "main:umd": "dist/umd/index.js",
+  "module": "dist/esm/index.mjs",
   "exports": {
-    "import": "./dist/esm/index.js",
-    "require": "./dist/cjs/index.js",
+    "default": "./dist/esm/index.modern.mjs",
+    "import": "./dist/esm/index.mjs",
+    "require": "./dist/cjs/index.cjs",
     "types": "./types/index.d.ts"
   },
   "files": [
@@ -16,9 +19,11 @@
     "types"
   ],
   "scripts": {
-    "build": "npm run build:esm && npm run build:cjs",
-    "build:esm": "tsc --outDir dist/esm --module esnext",
-    "build:cjs": "tsc --outDir dist/cjs --module commonjs",
+    "build": "npm run build:esm && npm run build:esm-modern && npm run build:cjs && npm run build:umd",
+    "build:esm": "microbundle -o dist/esm/index.mjs --format esm",
+    "build:esm-modern": "microbundle -o dist/esm/index.modern.mjs --format modern",
+    "build:cjs": "microbundle -o dist/cjs/index.cjs --format cjs",
+    "build:umd": "microbundle -o dist/umd/index.js --format umd",
     "prepare": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -46,6 +51,7 @@
   "devDependencies": {
     "@types/react": "^18",
     "@types/react-dom": "^18.2.19",
+    "microbundle": "^0.15.1",
     "react": "^18.2.0",
     "react-dom": "^18",
     "tslib": "^2.6.2",
