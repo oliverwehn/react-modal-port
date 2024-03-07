@@ -9,10 +9,10 @@
   "main:umd": "dist/umd/index.js",
   "module": "dist/esm/index.mjs",
   "exports": {
-    "default": "./dist/esm/index.modern.mjs",
     "import": "./dist/esm/index.mjs",
     "require": "./dist/cjs/index.cjs",
-    "types": "./types/index.d.ts"
+    "types": "./types/index.d.ts",
+    "default": "./dist/esm/index.modern.mjs"
   },
   "files": [
     "dist",
