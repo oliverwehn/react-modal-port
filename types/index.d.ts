@@ -1,5 +1,7 @@
 /// <reference types="react" />
 
+import { PropsWithChildren } from "react";
+
 export type ModalResolver = (...args: any[]) => Promise<void>|void;
 
 

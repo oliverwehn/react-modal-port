@@ -20,10 +20,10 @@
   ],
   "scripts": {
     "build": "npm run build:esm && npm run build:esm-modern && npm run build:cjs && npm run build:umd",
-    "build:esm": "microbundle -o dist/index.mjs --format esm",
-    "build:esm-modern": "microbundle -o dist/index.modern.mjs --format modern",
-    "build:cjs": "microbundle -o dist/index.cjs --format cjs",
-    "build:umd": "microbundle -o dist/index.umd.js --format umd",
+    "build:esm": "microbundle -o dist/index.mjs --format esm --globals react/jsx-runtime=jsx",
+    "build:esm-modern": "microbundle -o dist/index.modern.mjs --format modern --globals react/jsx-runtime=jsx",
+    "build:cjs": "microbundle -o dist/index.cjs --format cjs --globals react/jsx-runtime=jsx",
+    "build:umd": "microbundle -o dist/index.umd.js --format umd --globals react/jsx-runtime=jsx",
     "prepare": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -48,13 +48,14 @@
     "url": "https://github.com/oliverwehn/react-modal-port/issues"
   },
   "homepage": "https://github.com/oliverwehn/react-modal-port#readme",
+  "dependencies": {
+  },
   "devDependencies": {
+    "react": "^18",
+    "react-dom": "^18",
     "@types/react": "^18",
     "@types/react-dom": "^18.2.19",
     "microbundle": "^0.15.1",
-    "react": "^18.2.0",
-    "react-dom": "^18",
-    "tslib": "^2.6.2",
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
