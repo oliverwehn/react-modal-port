@@ -1,6 +1,6 @@
 /// <reference types="react" />
 
-export type ModalResolver = (ev?: React.SyntheticEvent) => Promise<any>|void;
+export type ModalResolver = (...args: any[]) => Promise<void>|void;
 
 
 export type LaunchModalResolvers = {
