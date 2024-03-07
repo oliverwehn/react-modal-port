@@ -45,6 +45,7 @@ declare module 'react-modal-port' {
   const ModalContextProvider: React.FC<PropsWithChildren>;
   const useModalContext: () => ModalContextProperties;
   const useModal: () => ModalContextProperties['launchModal'];
+  const useModalState: () => ModalState;
   const ModalPort: React.FC<ModalPortProps>;
 
 }
