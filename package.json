@@ -5,14 +5,14 @@
   "type": "module",
   "source": "src/index.ts",
   "types": "types/index.d.ts",
-  "main": "dist/cjs/index.cjs",
-  "main:umd": "dist/umd/index.js",
-  "module": "dist/esm/index.mjs",
+  "main": "dist/index.cjs",
+  "main:umd": "dist/index.umd.js",
+  "module": "dist/index.mjs",
   "exports": {
-    "import": "./dist/esm/index.mjs",
-    "require": "./dist/cjs/index.cjs",
+    "import": "./dist/index.mjs",
+    "require": "./dist/index.cjs",
     "types": "./types/index.d.ts",
-    "default": "./dist/esm/index.modern.mjs"
+    "default": "./dist/index.modern.mjs"
   },
   "files": [
     "dist",
@@ -20,10 +20,10 @@
   ],
   "scripts": {
     "build": "npm run build:esm && npm run build:esm-modern && npm run build:cjs && npm run build:umd",
-    "build:esm": "microbundle -o dist/esm/index.mjs --format esm",
-    "build:esm-modern": "microbundle -o dist/esm/index.modern.mjs --format modern",
-    "build:cjs": "microbundle -o dist/cjs/index.cjs --format cjs",
-    "build:umd": "microbundle -o dist/umd/index.js --format umd",
+    "build:esm": "microbundle -o dist/index.mjs --format esm",
+    "build:esm-modern": "microbundle -o dist/index.modern.mjs --format modern",
+    "build:cjs": "microbundle -o dist/index.cjs --format cjs",
+    "build:umd": "microbundle -o dist/index.umd.js --format umd",
     "prepare": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
