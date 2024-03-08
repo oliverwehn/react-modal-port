@@ -13,6 +13,8 @@ export type LaunchModalProps = {
   [key: string]: any;
 };
 
+export type ModalProps = LaunchModalResolvers & LaunchModalProps;
+
 export type ModalStackItem = {
   render: React.FunctionComponent<LaunchModalResolvers>;
   resolvers: LaunchModalResolvers;
@@ -21,7 +23,7 @@ export type ModalStackItem = {
 };
 
 export type LaunchModal = (
-  render: React.FunctionComponent<LaunchModalResolvers & LaunchModalProps>, 
+  render: React.FunctionComponent<ModalProps>, 
   resolvers: LaunchModalResolvers,
   props?: LaunchModalProps,
 ) => void;
