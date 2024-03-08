@@ -5,7 +5,7 @@ This small but neat package allows you to:
 * Launch modals flexibly from anywhere in your React app.
 * Have them render at one specific place in your DOM.
 
-**Demo:** https://codepen.io/oliverwehn/pen/YzMyoBr
+**Demo:** https://codepen.io/oliverwehn/pen/YzMyoBr?editors=0010
 
 ---
 - [Installation](#-installation)
