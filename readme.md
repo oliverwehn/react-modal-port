@@ -36,7 +36,6 @@ Besides `children` a prop `onBackdropClick` is passed to `render`. It holds, if 
 
 
 ```tsx
-import React from 'react';
 import { ModalContextProvider } from 'react-modal-port';
 
 // Backdrop component to be passed to the `ModalPort`’s `render` prop
@@ -78,7 +77,6 @@ export default RootLayout;
 Launching modals makes use of the `useModal` hook that provides you with the `launchModal` function.
 
 ```tsx
-import React from 'react';
 import { useModal } from 'react-modal-port';
 import DecisionModal from './modals/decision';
 
@@ -133,7 +131,6 @@ The `launchModal` function expects the following arguments:
 Modals can be created and designed to fully fit your needs. The only requirement is to define the functions to resolve them, for example, when clicking a button. The modal component for the example above could look like this:
 
 ```tsx
-import React from 'react';
 
 type DecisionModalProps = {
   decideYay: () => void;
@@ -195,7 +192,6 @@ It then could cater the following modal functionality:
 
 
 ```tsx
-import React from 'react';
 
 type DecisionModalProps = {
   decideYay: () => void;
