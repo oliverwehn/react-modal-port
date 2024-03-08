@@ -8,8 +8,6 @@ This small but neat package allows you to:
 **Demo:** https://codepen.io/oliverwehn/pen/YzMyoBr
 
 ---
-# Table of Contents
-
 - [Installation](#-installation)
 - [Components](#-components)
   - [ModalContextProvider](#modalcontextprovider)
