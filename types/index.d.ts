@@ -21,7 +21,7 @@ export type ModalStackItem = {
 };
 
 export type LaunchModal = (
-  render: React.FunctionComponent<LaunchModalResolvers>, 
+  render: React.FunctionComponent<LaunchModalResolvers & LaunchModalProps>, 
   resolvers: LaunchModalResolvers,
   props?: LaunchModalProps,
 ) => void;
