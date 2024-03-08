@@ -28,9 +28,10 @@ export const ModalContextProvider = ({ children }: Readonly<{ children: React.Re
     // Wrap resolvers to update the stack
     const wrappedResovers = Object.keys(resolvers).reduce((acc, key) => {
       const resolver = resolvers[key];
-      acc[key] = async (ev?: SyntheticEvent) => {
-        const result = await resolver(ev);
-        updateStack(stack.slice(0, -1));
+      acc[key] = async (...args: any[]) => {
+        const result = await resolver(...args);
+        // update stack with an array conating all the items in the stack except the last one
+        updateStack(currStack => currStack.slice(0, -1));
         return result;
       };
       return acc;
