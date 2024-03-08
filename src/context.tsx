@@ -24,7 +24,7 @@ export const ModalContextProvider = ({ children }: Readonly<{ children: React.Re
 
   const [ stack, updateStack ] = useState<ModalStackItem[]>([]);
 
-  const launchModal: LaunchModal = (render, resolvers, onBackdropClickUse) => {
+  const launchModal: LaunchModal = (render, resolvers, props = {}) => {
     // Wrap resolvers to update the stack
     const wrappedResovers = Object.keys(resolvers).reduce((acc, key) => {
       const resolver = resolvers[key];
@@ -41,7 +41,7 @@ export const ModalContextProvider = ({ children }: Readonly<{ children: React.Re
       {
         render,
         resolvers: wrappedResovers,
-        onBackdropClickUse,
+        props,
         state: {},
       },
     ]);

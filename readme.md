@@ -84,10 +84,14 @@ const Page: React.FC = () => {
       {
         decideYay: () => setDecision(true),
         decideNay: () => setDecision(false),
-        leaveMeAlone: () => {},
+        // Provide an `onBackdropClick` resolver to have it passed to
+        // the Backdrop component
+        onBackdropClick: () => {},
       },
-      // Optional name of the `onBackdropClick` resolver
-      "leaveMeAlone"
+      // Optionally, add further props to be passed to the modal component
+      {
+        timeLeft: Math.random() * 86400
+      }
     );
   }
 
@@ -113,7 +117,7 @@ The `launchModal` function expects the following arguments:
 |----------|------|-------------|
 | render | `React.FC` | A function that renders the modal and returns a `ReactNode`. |
 | resolvers | `{ [key: string]: (...args: any[]) => Promise<void>\|void }` | An object of resolver functions that will be passed as props to `render`. |
-| onBackdropClickUse | `string` | Optional: The key of the resolver function in the `resolvers` object that should be passed to the backdrop component’s `onBackdropClick` prop. |
+| props | `{ [key: string]: any }` | Optional: Further props you’d like to pass to the modal component in `render`. |
 
 Modals can be created and designed to fully fit your needs. The only requirement is to define the functions to resolve them, for example, when clicking a button. The modal component for the example above could look like this:
 
@@ -170,8 +174,6 @@ So you could adapt the `onClick` handler in our earlier example as follows:
         letMeThinkAboutIt: (p: Promise) => p,
         leaveMeAlone: () => {},
       },
-      // Optional name of the `onBackdropClick` resolver
-      "leaveMeAlone"
     );
   }
 
@@ -262,9 +264,17 @@ export const AskForNameModal: React.FC<AskForNameModalProps> = ({
   };
 
   const onButtonClick = () => {
-    launchModal(ConfirmModal, {
-      confirm: () => provideName(modalState.name),
-     });
+    launchModal(
+      ConfirmModal, 
+      {
+        // Chain first modal’s resolution to the second one’s
+        confirm: () => provideName(modalState.name),
+      },
+      // Pass the name on to the ConfirmModal for rendering
+      {
+        name: modalState.name,
+      }
+    );
   };
 
   return (

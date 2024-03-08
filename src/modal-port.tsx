@@ -23,8 +23,8 @@ const ModalPort: React.FC<ModalPortProps> = ({
   );
   const onBackdropClick = useCallback((ev: SyntheticEvent) => {
     if (ev.currentTarget !== ev.target) return;
-    currentModal?.onBackdropClickUse &&
-    currentModal.resolvers[currentModal.onBackdropClickUse](ev);
+    currentModal?.resolvers.onBackdropClickUse &&
+    currentModal.resolvers.onBackdropClickUse(ev);
   }, [ currentModal ]);
 
   useEffect(() => {
@@ -37,7 +37,10 @@ const ModalPort: React.FC<ModalPortProps> = ({
 
   return currentModal && (
     <Backdrop onBackdropClick={onBackdropClick}>
-      {currentModal.render(currentModal.resolvers)}
+      {currentModal.render({
+        ...currentModal.resolvers,
+        ...currentModal.props,
+      })}
     </Backdrop>
   ) || null;
 };

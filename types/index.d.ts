@@ -9,17 +9,21 @@ export type LaunchModalResolvers = {
   [key: string]: ModalResolver;
 };
 
+export type LaunchModalProps = {
+  [key: string]: any;
+};
+
 export type ModalStackItem = {
   render: React.FunctionComponent<LaunchModalResolvers>;
   resolvers: LaunchModalResolvers;
-  onBackdropClickUse?: string;
+  props: LaunchModalProps;
   state: ModalState;
 };
 
 export type LaunchModal = (
   render: React.FunctionComponent<LaunchModalResolvers>, 
   resolvers: LaunchModalResolvers,
-  onBackdropClickUse?: string,
+  props?: LaunchModalProps,
 ) => void;
 
 export type ModalState = { [key: string]: any };
