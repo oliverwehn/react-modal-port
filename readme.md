@@ -5,7 +5,20 @@ This small but neat package allows you to:
 * Launch modals flexibly from anywhere in your React app.
 * Have them render at one specific place in your DOM.
 
-## Installation
+**Demo:** https://codepen.io/oliverwehn/pen/YzMyoBr
+
+---
+# Table of Contents
+
+- [Installation](#-installation)
+- [Components](#-components)
+  - [ModalContextProvider](#modalcontextprovider)
+  - [ModalPort](#modalport)
+- [Launching Modals](#-launching-modals)
+- [Stacking Modals And Handling Modal State](#-stacking-modals-and-handling-modal-state)
+---
+
+## 🏁 Installation
 
 ```bash
 $ npm install react-modal-port
