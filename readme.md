@@ -12,6 +12,7 @@ This small but neat package allows you to:
 - [Components](#-components)
   - [ModalContextProvider](#modalcontextprovider)
   - [ModalPort](#modalport)
+  - [ModalPort](#usage-example)
 - [Launching Modals](#-launching-modals)
 - [Stacking Modals And Handling Modal State](#-stacking-modals-and-handling-modal-state)
 ---
@@ -30,11 +31,13 @@ The `ModalContextProvider` wraps your app to allow your app’s components to la
 
 ### ModalPort
 
-The `ModalPort` handles the rendering of your modals. It leaves the *how* you want to render your modals fully up to you. It simply requires a `React.FunctionComponent` to be passed to it via its `render` prop. This component allows you to wrap any rendered modal in, for example, a backdrop component.
+The `ModalPort` defines the outlet in your app through which your modals will be rendered. It requires one prop, `render`, that expects a `React.FunctionComponent`. Any modal you’ll launch will be rendered as the child of the component passed via the prop. Typically, this component will provide a backdrop the modal is rendered on top.
 
-Besides `children` a prop `onBackdropClick` is passed to `render`. It holds, if provided to the modal on launch, the click handler function that should be called if the backdrop is clicked, e.g. to dismiss the modal.
+Besides `children`, a prop `onBackdropClick` is passed to `render`. It holds, if provided to the modal on launch, the click handler function that should be called if the backdrop is clicked, e.g. to dismiss the modal.
 
+The `ModalPort` accepts two addtional optional props `onModalLauch` and `onModalClose` that both expect a function. The provided functions will be called in the event of a modal being launched or, respectively, a modal being closed.
 
+### Usage Example
 ```tsx
 import { ModalContextProvider } from 'react-modal-port';
 
@@ -64,6 +67,10 @@ const RootLayout:React.FC<PropsWithChildren> = ({ children }) => (
   <ModalContextProvider>
     <div style="width: 100%; min-height: 100vh;">
       {children}
+      {
+        /* The ModalPort defines the place in the app 
+         * where your modals will be rendered  */
+      }
       <ModalPort render={Backdrop} />
     </div>
   </ModalContextProvider>
