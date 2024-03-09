@@ -12,7 +12,7 @@ This small but neat package allows you to:
 - [Components](#-components)
   - [ModalContextProvider](#modalcontextprovider)
   - [ModalPort](#modalport)
-  - [ModalPort](#usage-example)
+  - [Usage Example](#usage-example)
 - [Launching Modals](#-launching-modals)
 - [Stacking Modals And Handling Modal State](#-stacking-modals-and-handling-modal-state)
 ---
