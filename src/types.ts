@@ -12,7 +12,7 @@ export type LaunchModalProps = {
   [key: string]: any;
 };
 
-export type ModalProps = LaunchModalResolvers & LaunchModalProps;
+export type ModalProps = Record<string, any>;
 
 export type ModalStackItem = {
   render: React.FunctionComponent<ModalProps>;
