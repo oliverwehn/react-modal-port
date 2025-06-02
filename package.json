@@ -1,6 +1,6 @@
 {
   "name": "react-modal-port",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Launch modals from any React component.",
   "type": "module",
   "source": "src/index.ts",
@@ -25,7 +25,9 @@
     "build:cjs": "microbundle -o dist/index.cjs --format cjs --globals react/jsx-runtime=jsx",
     "build:umd": "microbundle -o dist/index.umd.js --format umd --globals react/jsx-runtime=jsx",
     "prepare": "npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -50,16 +52,23 @@
   "homepage": "https://github.com/oliverwehn/react-modal-port#readme",
   "dependencies": {},
   "devDependencies": {
-    "react": "^18",
-    "react-dom": "^18",
-    "@types/react": "^18",
-    "@types/react-dom": "^18.2.19",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/jest": "^29.5.14",
     "microbundle": "^0.15.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.7.2",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/user-event": "^14.5.2"
   },
   "peerDependencies": {
-    "@types/react": "^18",
-    "react": "^18",
-    "react-dom": "^18"
+    "@types/react": "^18.0.0 || ^19.0.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
   }
 }

@@ -1,3 +1,4 @@
+// Export components and hooks
 export {
   ModalContextProvider,
   useModalContext,
@@ -5,4 +6,19 @@ export {
   useModalState,
 } from './context';
 
-export { default as ModalPort } from './modal-port';
+export { ModalPort } from './modal-port';
+
+// Export types
+export type {
+  ModalResolver,
+  LaunchModalResolvers,
+  LaunchModalProps,
+  ModalProps,
+  ModalStackItem,
+  LaunchModal,
+  ModalState,
+  UpdateModalState,
+  ModalContextProperties,
+  ModalPortRenderProps,
+  ModalPortProps
+} from './types';
