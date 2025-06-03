@@ -1,4 +1,5 @@
 import { 
+  ModalProps,
   type ModalPortProps, 
   type ModalStackItem 
 } from "./types";
@@ -19,12 +20,12 @@ const ModalPort: React.FC<ModalPortProps> = ({
 }) => {
 
   const { stack } = useModalContext();
-  const currentModal: ModalStackItem | null = useMemo(
+  const currentModal: ModalStackItem<ModalProps> | null = useMemo(
     () => stack.length > 0 ? stack[stack.length - 1] : null,
     [ stack ]
   );
   
-  const previousModalRef = useRef<ModalStackItem | null>(null);
+  const previousModalRef = useRef<ModalStackItem<ModalProps> | null>(null);
   
   const onBackdropClick = useCallback((ev: SyntheticEvent) => {
     if (ev.currentTarget !== ev.target) return;

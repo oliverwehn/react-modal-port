@@ -12,15 +12,16 @@ import {
   type LaunchModalResolvers,
   type ModalState,
   type UpdateModalState,
+  ModalProps,
 } from './types';
 
-export const ModalContext = createContext<ModalContextProperties | null>(null);
+export const ModalContext = createContext<ModalContextProperties<ModalProps> | null>(null);
 
 export const ModalContextProvider = ({ children }: Readonly<{ children: React.ReactNode }>) => {
 
-  const [ stack, updateStack ] = useState<ModalStackItem[]>([]);
+  const [ stack, updateStack ] = useState<ModalStackItem<ModalProps>[]>([]);
 
-  const launchModal: LaunchModal = useCallback((render, resolvers, props = {}) => {
+  const launchModal: LaunchModal<ModalProps> = useCallback((render, resolvers, props = {}) => {
     // Wrap resolvers to update the stack
     const wrappedResovers = Object.keys(resolvers).reduce((acc, key) => {
       const resolver = resolvers[key];
@@ -57,7 +58,7 @@ export const ModalContextProvider = ({ children }: Readonly<{ children: React.Re
     });
   }, []);
 
-  const contextProperties: ModalContextProperties = {
+  const contextProperties: ModalContextProperties<ModalProps> = {
     stack,
     launchModal,
     updateStack,
@@ -72,7 +73,7 @@ export const ModalContextProvider = ({ children }: Readonly<{ children: React.Re
  * Get properties from the modal context
  * @returns {ModalContextProperties} Object with the modal context properties
  */
-export function useModalContext(): ModalContextProperties {
+export function useModalContext(): ModalContextProperties<ModalProps> {
   const context = useContext(ModalContext);
   if (!context) {
     throw new Error('useModalContext must be used within a ModalContextProvider');
@@ -84,7 +85,7 @@ export function useModalContext(): ModalContextProperties {
  * Short-hand for `useModalContext().launchModal`
  * @returns {LaunchModal} The launchModal function
  */
-export function useModal(): LaunchModal {
+export function useModal(): LaunchModal<ModalProps> {
   const { launchModal } = useModalContext();
   return launchModal;
 }
