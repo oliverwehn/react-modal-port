@@ -85,9 +85,9 @@ export function useModalContext(): ModalContextProperties<ModalProps> {
  * Short-hand for `useModalContext().launchModal`
  * @returns {LaunchModal} The launchModal function
  */
-export function useModal(): LaunchModal<ModalProps> {
+export function useModal(): LaunchModal {
   const { launchModal } = useModalContext();
-  return launchModal;
+  return launchModal as LaunchModal;
 }
 
 /**
