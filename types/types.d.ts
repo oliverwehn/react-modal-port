@@ -6,22 +6,22 @@ export type LaunchModalResolvers = {
 export type LaunchModalProps = {
     [key: string]: any;
 };
-export type ModalProps = Record<string, any>;
-export type ModalStackItem = {
-    render: React.FunctionComponent<ModalProps>;
+export type ModalProps<P = Record<string, any>> = P;
+export type ModalStackItem<P extends Record<string, any> = Record<string, any>> = {
+    render: React.FunctionComponent<ModalProps<P>>;
     resolvers: LaunchModalResolvers;
     props: LaunchModalProps;
     state: ModalState;
 };
-export type LaunchModal = (render: React.FunctionComponent<ModalProps>, resolvers: LaunchModalResolvers, props?: LaunchModalProps) => void;
+export type LaunchModal<P extends Record<string, any> = Record<string, any>> = (render: React.FunctionComponent<ModalProps<P>>, resolvers: LaunchModalResolvers, props?: LaunchModalProps) => void;
 export type ModalState = {
     [key: string]: any;
 };
 export type UpdateModalState = (newState: ModalState) => void;
-export type ModalContextProperties = {
-    stack: ModalStackItem[];
-    launchModal: LaunchModal;
-    updateStack: (newStack: ModalStackItem[]) => void;
+export type ModalContextProperties<P extends Record<string, any> = Record<string, any>> = {
+    stack: ModalStackItem<P>[];
+    launchModal: LaunchModal<P>;
+    updateStack: (newStack: ModalStackItem<P>[]) => void;
     updateState: (newState: ModalState) => void;
 };
 export type ModalPortRenderProps = React.PropsWithChildren & {
