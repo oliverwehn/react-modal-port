@@ -15,13 +15,17 @@ import {
   ModalProps,
 } from './types';
 
-export const ModalContext = createContext<ModalContextProperties<ModalProps> | null>(null);
+export const ModalContext = createContext<ModalContextProperties | null>(null);
 
 export const ModalContextProvider = ({ children }: Readonly<{ children: React.ReactNode }>) => {
 
-  const [ stack, updateStack ] = useState<ModalStackItem<ModalProps>[]>([]);
+  const [ stack, updateStack ] = useState<ModalStackItem<any>[]>([]);
 
-  const launchModal: LaunchModal<ModalProps> = useCallback((render, resolvers, props = {}) => {
+  const launchModal = useCallback(<P extends Record<string, any> = Record<string, any>>(
+    render: React.FunctionComponent<ModalProps<P>>, 
+    resolvers: LaunchModalResolvers,
+    props: any = {}
+  ) => {
     // Wrap resolvers to update the stack
     const wrappedResovers = Object.keys(resolvers).reduce((acc, key) => {
       const resolver = resolvers[key];
@@ -58,7 +62,7 @@ export const ModalContextProvider = ({ children }: Readonly<{ children: React.Re
     });
   }, []);
 
-  const contextProperties: ModalContextProperties<ModalProps> = {
+  const contextProperties: ModalContextProperties = {
     stack,
     launchModal,
     updateStack,
@@ -73,7 +77,7 @@ export const ModalContextProvider = ({ children }: Readonly<{ children: React.Re
  * Get properties from the modal context
  * @returns {ModalContextProperties} Object with the modal context properties
  */
-export function useModalContext(): ModalContextProperties<ModalProps> {
+export function useModalContext(): ModalContextProperties {
   const context = useContext(ModalContext);
   if (!context) {
     throw new Error('useModalContext must be used within a ModalContextProvider');
@@ -85,9 +89,9 @@ export function useModalContext(): ModalContextProperties<ModalProps> {
  * Short-hand for `useModalContext().launchModal`
  * @returns {LaunchModal} The launchModal function
  */
-export function useModal(): LaunchModal {
+export function useModal() {
   const { launchModal } = useModalContext();
-  return launchModal as LaunchModal;
+  return launchModal;
 }
 
 /**

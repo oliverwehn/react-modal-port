@@ -30,10 +30,14 @@ export type LaunchModal<P extends Record<string, any> = Record<string, any>> = (
 export type ModalState = { [key: string]: any };
 export type UpdateModalState = (newState: ModalState) => void;
 
-export type ModalContextProperties<P extends Record<string, any> = Record<string, any>> = {
-  stack: ModalStackItem<P>[];
-  launchModal: LaunchModal<P>;
-  updateStack: (newStack: ModalStackItem<P>[]) => void;
+export type ModalContextProperties = {
+  stack: ModalStackItem<any>[];
+  launchModal: <P extends Record<string, any> = Record<string, any>>(
+    render: React.FunctionComponent<ModalProps<P>>, 
+    resolvers: LaunchModalResolvers,
+    props?: LaunchModalProps,
+  ) => void;
+  updateStack: (newStack: ModalStackItem<any>[]) => void;
   updateState: (newState: ModalState) => void;
 };
 
