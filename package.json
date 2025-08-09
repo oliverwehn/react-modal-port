@@ -1,6 +1,6 @@
 {
   "name": "react-modal-port",
-  "version": "0.2.6",
+  "version": "0.3.0",
   "description": "Launch modals from any React component.",
   "type": "module",
   "source": "src/index.ts",
@@ -67,8 +67,8 @@
     "@testing-library/user-event": "^14.5.2"
   },
   "peerDependencies": {
-    "@types/react": "^18.0.0 || ^19.0.0",
-    "react": "^18.0.0 || ^19.0.0",
-    "react-dom": "^18.0.0 || ^19.0.0"
+    "@types/react": "^19.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   }
 }
