@@ -1,7 +1,9 @@
-// CodePen JS panel (preprocessor: Babel). Imports resolve through the import map in the HTML panel.
-import React, { useEffect, useRef, useState } from 'react';
-import { createRoot } from 'react-dom/client';
-import { ModalPort, ModalProvider, useModal, useModalState } from 'react-modal-port';
+// CodePen JS panel (preprocessor: Babel).
+// Imports use full esm.sh URLs: CodePen's Babel turns bare imports ('react') into require() calls.
+// `?deps=` pins react-modal-port to the same React version, so the page and the library share one React.
+import React, { useEffect, useRef, useState } from 'https://esm.sh/react@19.3.0';
+import { createRoot } from 'https://esm.sh/react-dom@19.3.0/client';
+import { ModalPort, ModalProvider, useModal, useModalState } from 'https://esm.sh/react-modal-port@^1.0.0?deps=react@19.3.0,react-dom@19.3.0';
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
