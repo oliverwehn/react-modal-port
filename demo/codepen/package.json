@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-modal-port": "1.0.0?deps=react@19.3.0,react-dom@19.3.0"
+  }
+}
