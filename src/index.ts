@@ -1,24 +1,29 @@
-// Export components and hooks
 export {
+  ModalProvider,
   ModalContextProvider,
-  useModalContext,
   useModal,
+  useModalStack,
   useModalState,
+  useModalContext,
 } from './context';
-
 export { ModalPort } from './modal-port';
 
-// Export types
 export type {
+  FunctionKeys,
+  Resolvers,
+  RestProps,
+  LaunchRest,
+  LaunchOptions,
+  LaunchModal,
+  ModalHandle,
+  ModalState,
+  UpdateModalState,
+  ModalStackEntry,
+  ModalPortRenderProps,
+  ModalPortProps,
+  ModalContextProperties,
+  ModalProps,
   ModalResolver,
   LaunchModalResolvers,
   LaunchModalProps,
-  ModalProps,
-  ModalStackItem,
-  LaunchModal,
-  ModalState,
-  UpdateModalState,
-  ModalContextProperties,
-  ModalPortRenderProps,
-  ModalPortProps
 } from './types';

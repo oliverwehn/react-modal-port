@@ -1,70 +1,53 @@
-import { 
-  ModalProps,
-  type ModalPortProps, 
-  type ModalStackItem 
-} from "./types";
-import { useModalContext } from "./context";
-import { 
-  type SyntheticEvent, 
-  useCallback, 
-  useEffect, 
-  useMemo,
-  useRef,
-  type ReactElement
-} from "react";
+import { Fragment, useEffect, useRef, type ComponentType, type SyntheticEvent } from 'react';
+import { createPortal } from 'react-dom';
+import { ItemContext, useModalItems } from './context';
+import type { ModalPortProps, ModalPortRenderProps } from './types';
 
-const ModalPort: React.FC<ModalPortProps> = ({
+const NoBackdrop = ({ children }: ModalPortRenderProps) => <Fragment>{children}</Fragment>;
+
+/** Renders the top modal of the stack inside `backdrop`. */
+export function ModalPort({
+  backdrop,
+  render,
+  container,
   onModalLaunch,
   onModalClose,
-  render: Backdrop
-}) => {
-
-  const { stack } = useModalContext();
-  const currentModal: ModalStackItem<ModalProps> | null = useMemo(
-    () => stack.length > 0 ? stack[stack.length - 1] : null,
-    [ stack ]
-  );
-  
-  const previousModalRef = useRef<ModalStackItem<ModalProps> | null>(null);
-  
-  const onBackdropClick = useCallback((ev: SyntheticEvent) => {
-    if (ev.currentTarget !== ev.target) return;
-    if (currentModal?.resolvers.onBackdropClick) {
-      currentModal.resolvers.onBackdropClick(ev);
-    }
-  }, [ currentModal ]);
+  onStackChange,
+}: ModalPortProps) {
+  const stack = useModalItems();
+  const size = stack.length;
+  const previousSize = useRef(0);
 
   useEffect(() => {
-    const previousModal = previousModalRef.current;
-    
-    // Modal was launched (went from no modal to having a modal)
-    if (!previousModal && currentModal) {
-      onModalLaunch?.();
-    }
-    // Modal was closed (went from having a modal to no modal)
-    else if (previousModal && !currentModal) {
-      onModalClose?.();
-    }
-    
-    // Update the ref for next time
-    previousModalRef.current = currentModal;
-  }, [ currentModal, onModalLaunch, onModalClose ]);
+    const previous = previousSize.current;
+    if (previous === size) return;
+    previousSize.current = size;
+    onStackChange?.(size);
+    if (previous === 0) onModalLaunch?.();
+    else if (size === 0) onModalClose?.();
+  }, [size, onModalLaunch, onModalClose, onStackChange]);
 
-  const ModalContent = currentModal?.render;
+  const top = stack.at(-1);
+  if (!top) return null;
 
-  return (
-    <>
-      {ModalContent && (
-        <Backdrop onBackdropClick={onBackdropClick}>
-          <ModalContent
-            {...currentModal.resolvers}
-            {...currentModal.props}
-          />
-        </Backdrop>
-      ) || null}
-    </>
+  const Backdrop = backdrop ?? render ?? NoBackdrop;
+  // Props are typed per launch; the stack stores them loosely.
+  const Modal = top.render as ComponentType<Record<string, unknown>>;
+  const { onDismiss } = top;
+  const onBackdropClick = onDismiss
+    ? (event: SyntheticEvent) => {
+        // Ignore clicks that bubble up from the modal content.
+        if (event.currentTarget === event.target) void onDismiss(event);
+      }
+    : undefined;
+
+  const content = (
+    <Backdrop onBackdropClick={onBackdropClick} modalId={top.id} stackSize={size}>
+      <ItemContext key={top.id} value={top.id}>
+        <Modal {...top.props} {...top.resolvers} />
+      </ItemContext>
+    </Backdrop>
   );
-};
 
-export default ModalPort;
-export { ModalPort };
+  return container ? createPortal(content, container) : content;
+}
