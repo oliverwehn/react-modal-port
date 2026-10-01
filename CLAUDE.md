@@ -16,7 +16,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run build`: tsup emits `dist/index.{js,cjs,d.ts,d.cts}`, with a `"use client"` banner.
 - `npm run check:package`: publint, `attw --pack`, then `scripts/smoke-test.mjs`. The smoke test packs the tarball, installs it into a temporary consumer, loads it as both CJS and ESM, and checks the file list.
 
-CI runs on Node 22, 24 and 26, because Vitest, jsdom and ESLint require Node 22 or newer.
+- `npm run test:react [versions…]`: reruns the type check and tests against React 19.0, 19.1, 19.2, 19.3 and canary (or the versions you pass). It installs them with `--no-save`, then restores the lockfile with `npm ci`.
+
+TypeScript is held at 6.0. TypeScript 7 (the native compiler) has no JavaScript API yet, which typescript-eslint, tsup's declaration build and attw need. CI runs on Node 22, 24 and 26, because Vitest, jsdom and ESLint require Node 22 or newer.
 
 ## Architecture
 

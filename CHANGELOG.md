@@ -30,6 +30,10 @@ A full rework for correctness, type safety and packaging. See [MIGRATION.md](./M
 - `ModalProvider` and `ModalPort backdrop` are the new names; `ModalContextProvider` and `render` remain as aliases.
 - The bundles are marked `"use client"` for React Server Components.
 
+### Compatibility
+
+- Tested against React 19.0.0, the latest patch of 19.0, 19.1, 19.2 and 19.3, and the React canary. CI runs this matrix.
+
 ### Tooling
 
 - Build with tsup (ESM + CJS). Tests run on Vitest with type tests, StrictMode and render-count checks, 100% coverage, and a packed-tarball smoke test. Lint, publint, arethetypeswrong and CI were added.
