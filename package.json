@@ -37,7 +37,7 @@
     "test:coverage": "vitest run --coverage",
     "check:package": "publint && attw --pack . && node scripts/smoke-test.mjs",
     "verify": "npm run lint && npm run typecheck && npm run test:coverage && npm run build && npm run check:package",
-    "prepublishOnly": "npm run verify",
+    "prepublishOnly": "npm_config_dry_run=false npm run verify",
     "test:react": "node scripts/test-react-versions.mjs"
   },
   "repository": {
