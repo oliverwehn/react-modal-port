@@ -10,6 +10,8 @@ Launch modals from any React component, render them in one place, and have TypeS
 
 **Requires React 19.** Upgrading from 0.x? See [MIGRATION.md](./MIGRATION.md).
 
+**Demos:** [Basics](https://codepen.io/oliverwehn/pen/YzMyoBr) (confirm, stacking, async resolvers, programmatic close) · [Animated modals](https://github.com/oliverwehn/react-modal-port/tree/main/demo/codepen-animated) (dialog, drawer, bottom sheet)
+
 ---
 
 - [Installation](#installation)
@@ -19,6 +21,7 @@ Launch modals from any React component, render them in one place, and have TypeS
 - [Dismissing modals](#dismissing-modals)
 - [Stacking and modal state](#stacking-and-modal-state)
 - [An accessible backdrop with `<dialog>`](#an-accessible-backdrop-with-dialog)
+- [Animating modals in and out](#animating-modals-in-and-out)
 - [API reference](#api-reference)
 
 ## Installation
@@ -243,6 +246,50 @@ body:has(dialog.modal-backdrop[open]) { overflow: hidden; }
 ```
 
 Give each modal an accessible name (`aria-labelledby` or `aria-label`), and move focus into it if the first focusable element is not the right target.
+
+## Animating modals in and out
+
+**Enter:** every modal remounts when it becomes the top of the stack, so a CSS animation on the modal's root element plays each time it appears, including when it reappears after a modal on top of it closes.
+
+```css
+.modal { animation: pop-in 250ms ease-out both; }
+@keyframes pop-in { from { opacity: 0; transform: scale(0.96); } }
+```
+
+**Exit:** a modal stays mounted until its resolver settles, so a resolver that first awaits an exit animation gets a clean exit animation. A small wrapper around `launchModal` applies this to every resolver and to `onDismiss`:
+
+```tsx
+import { useModal, type LaunchModal } from 'react-modal-port';
+
+// Plays the exit animation of the modal with this id, if it is the one on screen.
+declare function playExit(modalId: number): Promise<void>;
+
+type AnyFn = (...args: never[]) => unknown;
+
+export function useAnimatedModal(): LaunchModal {
+  const launchModal = useModal();
+  return ((Component, resolvers, props, options = {}) => {
+    let id = 0;
+    const animated =
+      <F extends AnyFn>(fn: F) =>
+      async (...args: Parameters<F>) => {
+        await playExit(id);
+        return fn(...args);
+      };
+    const wrapped = Object.fromEntries(
+      Object.entries(resolvers as Record<string, AnyFn>).map(([key, fn]) => [key, animated(fn)]),
+    );
+    const handle = launchModal(Component, wrapped as never, props as never, {
+      ...options,
+      onDismiss: options.onDismiss && animated(options.onDismiss),
+    });
+    id = handle.id;
+    return { id, close: animated(handle.close) };
+  }) as LaunchModal;
+}
+```
+
+The backdrop receives `modalId` and `stackSize`, so `playExit` can check that the modal is the one on screen, and fade the backdrop out too when it is the last one. The [animated demo](https://github.com/oliverwehn/react-modal-port/tree/main/demo/codepen-animated) has a complete version using the Web Animations API, with drawer and bottom-sheet variants and support for `prefers-reduced-motion`.
 
 ## API reference
 

@@ -1,0 +1,126 @@
+:root {
+  --bg: #f6f5f2;
+  --surface: #ffffff;
+  --text: #1d1d1f;
+  --muted: #6b6b70;
+  --accent: #3b5bdb;
+  --accent-text: #ffffff;
+  --danger: #c92a2a;
+  --border: #dedcd6;
+  --scrim: rgb(20 20 24 / 0.55);
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #17171a;
+    --surface: #222226;
+    --text: #ececef;
+    --muted: #a0a0a8;
+    --accent: #748ffc;
+    --accent-text: #0b0b0d;
+    --danger: #ff8787;
+    --border: #36363c;
+    --scrim: rgb(0 0 0 / 0.65);
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Lock page scroll while a modal is open */
+body:has(dialog.backdrop[open]) { overflow: hidden; }
+
+main {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 3rem 1rem;
+}
+
+h1 { margin: 0 0 0.25rem; font-size: 1.75rem; }
+h2 { margin: 0 0 0.5rem; font-size: 1.15rem; }
+p { margin: 0 0 1rem; }
+.lead { color: var(--muted); margin-bottom: 2rem; }
+
+.cards { display: grid; gap: 1rem; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+}
+
+.card p { color: var(--muted); }
+.result { margin: 0.75rem 0 0; color: var(--text); font-weight: 500; }
+
+button {
+  font: inherit;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+button:disabled { opacity: 0.6; cursor: progress; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* The ModalPort backdrop: a native <dialog> shown with showModal() */
+dialog.backdrop {
+  border: none;
+  padding: 0;
+  background: transparent;
+  max-width: none;
+  max-height: none;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+dialog.backdrop::backdrop { background: var(--scrim); }
+dialog.backdrop:not([open]) { display: none; }
+dialog.backdrop[data-dismissible="true"] { cursor: pointer; }
+
+.modal {
+  cursor: auto;
+  width: min(26rem, calc(100% - 2rem));
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 1.5rem 3rem rgb(0 0 0 / 0.25);
+}
+.modal p { color: var(--muted); }
+.modal .actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1.25rem; }
+.modal .error { color: var(--danger); }
+.modal input {
+  width: 100%;
+  font: inherit;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+}
+
+.stack-badge {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1;
+  font-size: 0.8rem;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+}
+

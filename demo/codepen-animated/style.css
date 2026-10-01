@@ -1,0 +1,136 @@
+:root {
+  --bg: #f6f5f2;
+  --surface: #ffffff;
+  --text: #1d1d1f;
+  --muted: #6b6b70;
+  --accent: #3b5bdb;
+  --accent-text: #ffffff;
+  --border: #dedcd6;
+  --scrim: rgb(20 20 24 / 0.55);
+  --enter: 260ms;
+  --ease-out: cubic-bezier(0.2, 0.9, 0.3, 1.2);
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #17171a;
+    --surface: #222226;
+    --text: #ececef;
+    --muted: #a0a0a8;
+    --accent: #748ffc;
+    --accent-text: #0b0b0d;
+    --border: #36363c;
+    --scrim: rgb(0 0 0 / 0.65);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --enter: 1ms; }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+body:has(dialog.backdrop[open]) { overflow: hidden; }
+
+main { max-width: 44rem; margin: 0 auto; padding: 3rem 1rem; }
+h1 { margin: 0 0 0.25rem; font-size: 1.75rem; }
+h2 { margin: 0 0 0.5rem; font-size: 1.15rem; }
+p { margin: 0 0 1rem; }
+.lead { color: var(--muted); margin-bottom: 2rem; }
+.cards { display: grid; gap: 1rem; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 0.75rem; padding: 1.25rem; }
+.card p { color: var(--muted); }
+.result { margin: 0.75rem 0 0; color: var(--text); font-weight: 500; }
+
+button {
+  font: inherit;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* The <dialog> is a full-viewport, transparent top-layer container.
+   The visible scrim is a real element so it can be animated in and out. */
+dialog.backdrop {
+  border: none;
+  padding: 0;
+  background: transparent;
+  max-width: none;
+  max-height: none;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+dialog.backdrop:not([open]) { display: none; }
+dialog.backdrop::backdrop { background: transparent; }
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--scrim);
+  animation: fade-in var(--enter) ease-out both;
+}
+.scrim[data-dismissible="true"] { cursor: pointer; }
+
+.stack-badge {
+  position: fixed;
+  z-index: 1;
+  top: 1rem;
+  right: 1rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+}
+
+.modal {
+  position: relative; /* above the scrim */
+  width: min(26rem, calc(100% - 2rem));
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 1.5rem 3rem rgb(0 0 0 / 0.25);
+}
+.modal p { color: var(--muted); }
+.modal .actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1.25rem; }
+
+/* Enter animations run on mount; every modal remounts, so each one animates in. */
+.modal[data-motion="pop"] { animation: pop-in var(--enter) var(--ease-out) both; }
+
+.modal[data-motion="drawer"] {
+  justify-self: end;
+  align-self: stretch;
+  width: min(24rem, 100%);
+  border-radius: 0.75rem 0 0 0.75rem;
+  animation: slide-in var(--enter) cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.modal[data-motion="sheet"] {
+  align-self: end;
+  width: min(36rem, 100%);
+  border-radius: 1rem 1rem 0 0;
+  animation: rise-in var(--enter) cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes fade-in { from { opacity: 0; } }
+@keyframes pop-in { from { opacity: 0; transform: translateY(0.75rem) scale(0.96); } }
+@keyframes slide-in { from { transform: translateX(100%); } }
+@keyframes rise-in { from { transform: translateY(100%); } }
