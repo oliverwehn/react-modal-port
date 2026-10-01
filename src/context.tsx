@@ -30,8 +30,16 @@ export const ItemContext = createContext<number | null>(null);
 
 let nextId = 0;
 const warned = new Set<string>();
-declare const process: { env: { NODE_ENV?: string } } | undefined;
-const isProduction = () => typeof process !== 'undefined' && process.env.NODE_ENV === 'production';
+declare const process: { env: { NODE_ENV?: string } };
+// Bundlers replace the literal `process.env.NODE_ENV` but usually do not define `process`,
+// so read it directly; unbundled ESM (no `process` at all) falls back to development.
+const isProduction = () => {
+  try {
+    return process.env.NODE_ENV === 'production';
+  } catch {
+    return false;
+  }
+};
 function warnOnce(key: string, message: string) {
   if (isProduction() || warned.has(key)) return;
   warned.add(key);

@@ -202,6 +202,21 @@ describe('dev warnings', () => {
     expect(onConfirm).toHaveBeenCalledTimes(1);
   });
 
+  it('treats a missing `process` global (unbundled ESM in the browser) as development', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const { api } = renderWithPort();
+    const launchLoose = api.launchModal as unknown as (...args: unknown[]) => void;
+    vi.stubGlobal('process', undefined);
+    try {
+      act(() => {
+        launchLoose(Confirm, { onCancel: () => {} }, { title: 'A', onCancel: 'no-process' });
+      });
+    } finally {
+      vi.unstubAllGlobals();
+    }
+    expect(warn).toHaveBeenCalledTimes(1);
+  });
+
   it('does not warn in production', () => {
     vi.stubEnv('NODE_ENV', 'production');
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
