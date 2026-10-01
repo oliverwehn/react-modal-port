@@ -1,313 +1,277 @@
 # react-modal-port
 
-This small but neat package allows you to:
-* Define and style modals the way *you* want or need.
-* Launch modals flexibly from anywhere in your React app.
-* Have them render at one specific place in your DOM.
+Launch modals from any React component, render them in one place, and have TypeScript check every launch.
 
-**Demo:** https://codepen.io/oliverwehn/pen/YzMyoBr?editors=0010
+- **Bring your own UI.** Modals and backdrops are your components; the library ships no styles or markup.
+- **Launch from anywhere.** `useModal()` returns a stable `launchModal` function that can be called from components, effects or other modals.
+- **One outlet.** `<ModalPort>` renders the top modal of a stack, wherever you put it (or into a portal).
+- **Type-safe.** Resolvers and props are checked against the modal component's props.
+- **Async-aware stacking.** A modal closes when one of its resolvers settles, even if other modals were stacked on top in the meantime.
+
+**Requires React 19.** Upgrading from 0.x? See [MIGRATION.md](./MIGRATION.md).
 
 ---
-- [Installation](#-installation)
-- [Components](#-components)
-  - [ModalContextProvider](#modalcontextprovider)
-  - [ModalPort](#modalport)
-  - [Usage Example](#usage-example)
-- [Launching Modals](#-launching-modals)
-- [Stacking Modals And Handling Modal State](#-stacking-modals-and-handling-modal-state)
----
 
-## 🏁 Installation
+- [Installation](#installation)
+- [Setup](#setup)
+- [Launching modals](#launching-modals)
+- [Asynchronous resolution](#asynchronous-resolution)
+- [Dismissing modals](#dismissing-modals)
+- [Stacking and modal state](#stacking-and-modal-state)
+- [An accessible backdrop with `<dialog>`](#an-accessible-backdrop-with-dialog)
+- [API reference](#api-reference)
+
+## Installation
 
 ```bash
-$ npm install react-modal-port
+npm install react-modal-port
 ```
 
-## 🧩 Components
+## Setup
 
-### ModalContextProvider
-
-The `ModalContextProvider` wraps your app to allow your app’s components to launch or render modals.
-
-### ModalPort
-
-The `ModalPort` defines the outlet in your app through which your modals will be rendered. It requires one prop, `render`, that expects a `React.FunctionComponent`. Any modal you’ll launch will be rendered as the child of the component passed via the prop. Typically, this component will provide a backdrop the modal is rendered on top.
-
-Besides `children`, a prop `onBackdropClick` is passed to `render`. It holds, if provided to the modal on launch, the click handler function that should be called if the backdrop is clicked, e.g. to dismiss the modal.
-
-The `ModalPort` accepts two addtional optional props `onModalLauch` and `onModalClose` that both expect a function. The provided functions will be called in the event of a modal being launched or, respectively, a modal being closed.
-
-### Usage Example
-```tsx
-import { ModalContextProvider } from 'react-modal-port';
-
-// Backdrop component to be passed to the `ModalPort`’s `render` prop
-const Backdrop: React.FC<ModalPortRenderProps> = ({ children, onBackdropClick }) => (
-  <div
-    style="
-      position: fixed;
-      z-index: 1000,
-      display: flex;
-      justify-content: center;
-      align-items-center;
-      background-color: rgba(0,0,0,.65);
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-    "
-    onClick={onBackdropClick}
-  >
-    {children}
-  </div>
-);
-
-// Your app’s root layout component
-const RootLayout:React.FC<PropsWithChildren> = ({ children }) => (
-  <ModalContextProvider>
-    <div style="width: 100%; min-height: 100vh;">
-      {children}
-      {
-        /* The ModalPort defines the place in the app 
-         * where your modals will be rendered  */
-      }
-      <ModalPort render={Backdrop} />
-    </div>
-  </ModalContextProvider>
-);
-
-export default RootLayout;
-```
-
-## 🚀 Launching Modals
-
-Launching modals makes use of the `useModal` hook that provides you with the `launchModal` function.
+Wrap your app in `ModalProvider` and place one `ModalPort` where modals should render. `backdrop` is the component the current modal is rendered into.
 
 ```tsx
-import { useModal } from 'react-modal-port';
-import DecisionModal from './modals/decision';
+import type { ReactNode } from 'react';
+import { ModalPort, ModalProvider, type ModalPortRenderProps } from 'react-modal-port';
 
-const Page: React.FC = () => {
-
-  const launchModal = useModal();
-  const [ decision, setDecision ] = useState<boolean|null>(null);
-
-  const onClick = () => {
-    launchModal(
-      // Modal component
-      DecisionModal, 
-      // Modal resolvers
-      {
-        decideYay: () => setDecision(true),
-        decideNay: () => setDecision(false),
-        // Provide an `onBackdropClick` resolver to have it passed to
-        // the Backdrop component
-        onBackdropClick: () => {},
-      },
-      // Optionally, add further props to be passed to the modal component
-      {
-        timeLeft: Math.random() * 86400
-      }
-    );
-  }
-
+function Backdrop({ children, onBackdropClick }: ModalPortRenderProps) {
   return (
-    <div style="padding: 4rem;">
-      <h1>Welcome</h1>
-      {decision === null && (
-      <p>Make your decision!</p>
-      ) || (
-      <p>Your decision is: {decision && "Yay" || "Nay"}</p>
-      )}
-      
-      <div style="display: flex; flex-direction: row; gap: 0.5rem;">
-        <button type="button" onClick={onClick}>Let me decide now</button>
-      </div>
+    <div
+      onClick={onBackdropClick}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 1000,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'rgba(0, 0, 0, 0.65)',
+      }}
+    >
+      {children}
     </div>
   );
 }
 
+export function RootLayout({ children }: { children: ReactNode }) {
+  return (
+    <ModalProvider>
+      {children}
+      <ModalPort backdrop={Backdrop} />
+    </ModalProvider>
+  );
+}
 ```
-The `launchModal` function expects the following arguments:
-| Argument | Type | Description |
-|----------|------|-------------|
-| render | `React.FC` | A function that renders the modal and returns a `ReactNode`. |
-| resolvers | `{ [key: string]: (...args: any[]) => Promise<void>\|void }` | An object of resolver functions that will be passed as props to `render`. |
-| props | `{ [key: string]: any }` | Optional: Further props you’d like to pass to the modal component in `render`. |
 
-Modals can be created and designed to fully fit your needs. The only requirement is to define the functions to resolve them, for example, when clicking a button. The modal component for the example above could look like this:
+The package is marked `"use client"`, so it can be imported from React Server Component layouts (for example in Next.js).
+
+## Launching modals
+
+A modal is a plain component. The functions it calls to finish are its **resolvers**.
 
 ```tsx
-
 type DecisionModalProps = {
+  question: string;
   decideYay: () => void;
   decideNay: () => void;
-  leaveMeAlone?: () => void;
 };
 
-const DecisionModal: React.FC<DecisionModalProps> = ({
-  decideYay,
-  decideNay,
-}) => (
-  <div
-    style="background-color: white; border-radius: 0.5rem; padding: 1rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;"
-    role="dialog"
-    aria-modal="true"
-    aria-labeledby="modal-title"
-    aria-describedby="modal-description"
-  >
-    <h4 id="modal-title">How do you decide?</h4>
-    <div id ="modal-description">
-      <p>Make your decision and click one of the buttons below.</p>
-    </div>
-    <div style="display: flex; flex-direction: row; gap: 0.25rem; justify-content: center;">
+export function DecisionModal({ question, decideYay, decideNay }: DecisionModalProps) {
+  return (
+    <div role="dialog" aria-modal="true" aria-labelledby="decision-title">
+      <h2 id="decision-title">{question}</h2>
       <button type="button" onClick={decideYay}>Yay</button>
       <button type="button" onClick={decideNay}>Nay</button>
     </div>
-  </div>
-)
-
-export default DecisionModal;
-```
-
-## 🔂 Asynchronous Resolution
-
-Modals can be simple like the one above or highly complex like a full wizard experience or questionnaire. It is also possible to trigger asynchronous operations within a resolver function. As long as the resolver function returns a promise, the modal won’t close until the promise is resolved.
-
-So you could adapt the `onClick` handler in our earlier example as follows:
-```tsx
-  // ...
-
-  const onClick = () => {
-    launchModal(
-      // Modal component
-      DecisionModal, 
-      // Modal resolvers
-      {
-        decideYay: () => setDecision(true),
-        decideNay: () => setDecision(false),
-        letMeThinkAboutIt: (p: Promise) => p,
-        leaveMeAlone: () => {},
-      },
-    );
-  }
-
-  // ...
-```
-
-It then could cater the following modal functionality:
-
-
-```tsx
-
-type DecisionModalProps = {
-  decideYay: () => void;
-  decideNay: () => void;
-  letMeThinkAboutIt: (p: Promise) => Promise;
-  leaveMeAlone?: () => void;
-};
-
-const DecisionModal: React.FC<DecisionModalProps> = ({
-  decideYay,
-  decideNay,
-  letMeThinkAboutIt,
-}) => {
-
-  const imUndecided = () => {
-    const p = new Promise((resolve) => {
-      const options = [ decideYay, decideNay ];
-      setTimeout(
-        () => resolve(options[Math.round(Math.random())]),
-        Math.random() * 60000
-      );
-    });
-    letMeThinkAboutIt(p);
-  };
-
-  return (
-    <div
-      style="background-color: white; border-radius: 0.5rem; padding: 1rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;"
-      role="dialog"
-      aria-modal="true"
-      aria-labeledby="modal-title"
-      aria-describedby="modal-description"
-    >
-      <h4 id="modal-title">How do you decide?</h4>
-      <div id ="modal-description">
-        <p>Make your decision and click one of the buttons below.</p>
-      </div>
-      <div style="display: flex; flex-direction: row; gap: 0.25rem; justify-content: center;">
-        <button type="button" onClick={decideYay}>Yay</button>
-        <button type="button" onClick={decideNay}>Nay</button>
-        <button type="button" onClick={imUndecided}>Let me think</button>
-      </div>
-    </div>
   );
 }
-
-export default DecisionModal;
 ```
 
-## 🥞 Stacking Modals And Handling Modal State
-
-If you need to launch a modal from a modal, the modals become (logically) stacked. That means that the `ModalPort` will always render the modal at the top of the modal stack and will return to the previous one as soon as the current one is resolved. Via the resolver functions, data can be passed from the resolving modal to the modal it was launched from.
-
-In case you need to handle state within multiple stacked modal, you can create, access, and update the modal state using the `useModalState` hook. It returns a tuple with the current modal state and a function to update the state. The modal state is always an object holding key-value pairs. Each modal’s modal state will persist until the modal itself is resolved.
-
-In the example below, we’ll ask the user to enter their name and prompt them in a second modal to confirm. We’ll fall back to the first modal with the name previously entered if the user wishes to edit it once more.
+Launch it with `launchModal(Component, resolvers, props?, options?)`:
 
 ```tsx
-import React from "react"; 
-import ConfirmModal from "./ConfirmModal";
+import { useState } from 'react';
+import { useModal } from 'react-modal-port';
+import { DecisionModal } from './decision-modal';
 
-type AskForNameModalProps = {
-  provideName: ModalResolver,
-};
-
-export const AskForNameModal: React.FC<AskForNameModalProps> = ({
-  provideName,
-}) => {
-
+export function Page() {
   const launchModal = useModal();
-  const [ modalState, updateModalState ] = useModalState();
-  const onNameChange = (ev) => {
-    updateModalState({
-      ...modalState,
-      name: ev.target.value,
-    });
-  };
+  const [decision, setDecision] = useState<boolean | null>(null);
 
-  const onButtonClick = () => {
+  const ask = () => {
     launchModal(
-      ConfirmModal, 
-      {
-        // Chain first modal’s resolution to the second one’s
-        confirm: () => provideName(modalState.name),
-      },
-      // Pass the name on to the ConfirmModal for rendering
-      {
-        name: modalState.name,
-      }
+      DecisionModal,
+      { decideYay: () => setDecision(true), decideNay: () => setDecision(false) },
+      { question: 'Ship it?' },
     );
   };
 
   return (
-    <div 
-      style="background-color: white; border-radius: 0.5rem; padding: 1rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;"
-      role="dialog"
-      aria-modal="true"
-      aria-labeledby="modal-title"
-      aria-describedby="modal-description"
-    >
-      <h4 id="modal-title">How should we call you?</h4>
-      <div id="modal-description">
-        <p>Please enter your firstname or nickname of choice.</p>
-      </div>
-      <input type="text" value={modalState.name} onChange={onNameChange} style="width: 100%">
-      <button type="button" onClick={onButtonClick}>Set name</button>
+    <>
+      <p>{decision === null ? 'Make your decision!' : `Your decision: ${decision ? 'Yay' : 'Nay'}`}</p>
+      <button type="button" onClick={ask}>Decide now</button>
+    </>
+  );
+}
+```
+
+| Argument | Description |
+| --- | --- |
+| `Component` | The modal component. Its props define what the other arguments must contain. |
+| `resolvers` | Function props of the modal that close it. Each one is called with the modal's arguments, and the modal is removed once it returns (or its promise resolves). Calling a second resolver after the first is ignored. |
+| `props` | The modal's remaining props. Required when the modal still has required props, otherwise optional. |
+| `options` | `{ onDismiss }`: see [Dismissing modals](#dismissing-modals). |
+
+TypeScript catches the common mistakes:
+
+```tsx
+launchModal(DecisionModal, { decideYey: () => {} }, { question: '?' }); // ✗ unknown resolver
+launchModal(DecisionModal, { decideYay: () => {}, decideNay: () => {} }); // ✗ `question` is missing
+```
+
+A function prop that is *not* listed in `resolvers` can be passed in `props`. It is then just a callback and does not close the modal.
+
+`launchModal` returns a handle, `{ id, close() }`. `close()` removes that modal without calling a resolver, for example after a timeout.
+
+## Asynchronous resolution
+
+If a resolver returns a promise, the modal stays open until it settles:
+
+```tsx
+launchModal(SaveModal, {
+  onSave: async (draft: Draft) => {
+    await api.save(draft); // the modal is still shown while this runs
+  },
+});
+```
+
+- **Fulfilled:** the modal closes. This happens even if other modals were stacked on top of it in the meantime; only *this* modal is removed.
+- **Rejected or thrown:** the modal stays open and the promise returned to the modal component rejects with the same error, so the modal can show it and let the user retry. Resolvers can be called again after a failure.
+
+## Dismissing modals
+
+Pass `onDismiss` in the options to make a modal dismissible from outside its content:
+
+```tsx
+launchModal(DecisionModal, resolvers, { question: 'Ship it?' }, { onDismiss: () => setDecision(null) });
+```
+
+The backdrop then receives `onBackdropClick`, which calls `onDismiss` (and closes the modal) only for clicks on the backdrop itself, not for clicks that bubble up from the modal. For modals launched without `onDismiss`, `onBackdropClick` is `undefined`, so the backdrop can tell whether the current modal is dismissible.
+
+## Stacking and modal state
+
+Modals launched while another one is open are stacked. The port shows the top one and returns to the previous one when it closes. Each stacked modal keeps its own **modal state**, read and updated with `useModalState()` from inside the modal. Modal state survives while other modals are on top and is discarded when the modal closes.
+
+Component state (`useState`) inside a modal does **not** survive being covered, because only the top modal is mounted. Use modal state for anything that should outlive a nested modal.
+
+```tsx
+import { useModal, useModalState } from 'react-modal-port';
+import { ConfirmModal } from './confirm-modal';
+
+type AskForNameProps = { provideName: (name: string) => void };
+
+export function AskForNameModal({ provideName }: AskForNameProps) {
+  const launchModal = useModal();
+  const [state, setState] = useModalState<{ name: string }>();
+  const name = state?.name ?? '';
+
+  const confirm = () => {
+    launchModal(
+      ConfirmModal,
+      // Resolving the confirmation also resolves this modal.
+      { confirm: (ok: boolean) => { if (ok) provideName(name); } },
+      { name },
+    );
+  };
+
+  return (
+    <div role="dialog" aria-modal="true" aria-labelledby="name-title">
+      <h2 id="name-title">How should we call you?</h2>
+      <input
+        aria-label="Name"
+        value={name}
+        onChange={(event) => {
+          const value = event.target.value;
+          setState((prev) => ({ ...prev, name: value }));
+        }}
+      />
+      <button type="button" onClick={confirm}>Set name</button>
     </div>
   );
-
 }
-
 ```
+
+`setState` accepts a new state object or an updater function, like React's own `setState`. Prefer the updater form when the new state depends on the old one.
+
+## An accessible backdrop with `<dialog>`
+
+The library leaves markup and accessibility to you, so they can match your design system. The native `<dialog>` element covers most of it: shown with `showModal()`, it sits in the top layer, makes the rest of the page inert, traps focus and fires `cancel` on Escape.
+
+```tsx
+import { useEffect, useRef } from 'react';
+import type { ModalPortRenderProps } from 'react-modal-port';
+
+export function DialogBackdrop({ children, onBackdropClick }: ModalPortRenderProps) {
+  const ref = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    const dialog = ref.current;
+    dialog?.showModal();
+    return () => dialog?.close();
+  }, []);
+
+  return (
+    <dialog
+      ref={ref}
+      className="modal-backdrop"
+      onClick={onBackdropClick}
+      onCancel={(event) => {
+        event.preventDefault(); // let the library decide whether the modal closes
+        onBackdropClick?.(event);
+      }}
+    >
+      {children}
+    </dialog>
+  );
+}
+```
+
+```css
+/* Lock page scroll while a modal is open */
+body:has(dialog.modal-backdrop[open]) { overflow: hidden; }
+```
+
+Give each modal an accessible name (`aria-labelledby` or `aria-label`), and move focus into it if the first focusable element is not the right target.
+
+## API reference
+
+### `<ModalProvider>`
+
+Holds the modal stack. Wrap your app (or the part that uses modals) in it. `ModalContextProvider` is a deprecated alias.
+
+### `<ModalPort>`
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `backdrop` | `ComponentType<ModalPortRenderProps>` | Renders around the current modal. Receives `children`, `onBackdropClick` (undefined unless the modal is dismissible), `modalId` and `stackSize`. Optional. |
+| `container` | `Element \| DocumentFragment` | Render into this element through a portal. |
+| `onModalLaunch` | `() => void` | The stack went from empty to non-empty. |
+| `onModalClose` | `() => void` | The stack became empty. |
+| `onStackChange` | `(size: number) => void` | Any modal was launched or closed. |
+| `render` | | Deprecated alias of `backdrop`. |
+
+### Hooks
+
+| Hook | Returns |
+| --- | --- |
+| `useModal()` | `launchModal`. Stable across renders; components using only this hook do not re-render when modals open or close. |
+| `useModalState<S>()` | `[state \| null, setState]` for the modal the hook is called in. Called outside a modal, it refers to the top modal (`null` if none). |
+| `useModalStack()` | A read-only array of `{ id, render, props, state }`, bottom first. |
+| `useModalContext()` | Deprecated. `{ stack, launchModal, updateState }`; re-renders on every stack change. |
+
+All hooks throw if used outside a `ModalProvider`.
+
+## License
+
+MIT
