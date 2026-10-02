@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.1
+
+Documentation only; the library code is unchanged.
+
+- README links to the new CodePen 2.0 demos: [usage examples](https://codepen.io/oliverwehn/pen/018e18fb-0f15-724c-8fdf-4f47406f37d9) and [animation examples](https://codepen.io/oliverwehn/pen/01a0fb4d-2c07-7c34-af66-1ac02a634b22).
+- The demos in `demo/` are ported to the CodePen 2.0 editor (`package.json` with esm.sh packages, `.jsx` via the Babel block). The animation examples gained a stacked-modal deck and fixed drawer and bottom-sheet enter animations.
+
 ## 1.0.0
 
 A full rework for correctness, type safety and packaging. See [MIGRATION.md](./MIGRATION.md) for upgrade steps.

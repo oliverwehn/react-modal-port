@@ -1,6 +1,6 @@
 {
   "name": "react-modal-port",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Launch type-safe modals from any React component and render them in one place.",
   "type": "module",
   "main": "./dist/index.cjs",
