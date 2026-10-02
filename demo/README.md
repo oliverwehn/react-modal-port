@@ -2,10 +2,10 @@
 
 Two demos for the **CodePen 2.0 editor**. Each folder is a complete pen:
 
-| Folder | Shows |
-| --- | --- |
-| `codepen/` | Confirm with dismiss, modal state handed on to a nested modal and kept while it's covered, async resolver with retry, programmatic close |
-| `codepen-animated/` | Enter and exit animations: dialog, drawer and bottom sheet, plus stacked modals shown as a deck with direction-aware motion |
+| Folder | Pen | Shows |
+| --- | --- | --- |
+| `codepen/` | [Usage examples](https://codepen.io/editor/oliverwehn/pen/018e18fb-0f15-724c-8fdf-4f47406f37d9) | Confirm with dismiss, modal state handed on to a nested modal and kept while it's covered, async resolver with retry, programmatic close |
+| `codepen-animated/` | [Animation examples](https://codepen.io/editor/oliverwehn/pen/01a0fb4d-2c07-7c34-af66-1ac02a634b22) | Enter and exit animations: dialog, drawer and bottom sheet, plus stacked modals shown as a deck with direction-aware motion |
 
 Each pen has four files:
 
@@ -22,7 +22,7 @@ Each pen has four files:
 2. Replace the contents of `index.html` and `style.css` with the files from the demo folder.
 3. Rename `script.js` to **`script.jsx`** and paste the demo's `script.jsx`. The extension is what enables Babel for the JSX. You don't need to add the block by hand.
 4. Add a `package.json` file with the demo's `package.json`. If CodePen has already generated one from the imports, replace its contents.
-5. Save, and point the matching link in the root `readme.md` at the pen.
+5. Save. If you create a new pen instead of updating the linked ones, update the links here and in the root `readme.md`.
 
 The bare imports (`'react'`, `'react-modal-port'`) are resolved by CodePen through an import map that it generates from `package.json`.
 
