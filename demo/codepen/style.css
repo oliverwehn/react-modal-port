@@ -76,6 +76,13 @@ p { margin: 0 0 1rem; }
 }
 
 .card p { color: var(--muted); }
+.card p code {
+  font: 0.85em ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--text);
+  background: var(--bg);
+  border-radius: 0.25rem;
+  padding: 0.1em 0.3em;
+}
 .result { margin: 0.75rem 0 0; color: var(--text); font-weight: 500; }
 
 button {

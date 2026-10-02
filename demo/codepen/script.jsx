@@ -78,7 +78,7 @@ function ConfirmModal({ question, confirm, cancel }) {
   );
 }
 
-/* --- 2. Stacked modals sharing modal state ------------------------------ */
+/* --- 2. Modal state that survives a nested modal ----------------------- */
 function AskForNameModal({ provideName, cancel }) {
   const launchModal = useModal();
   // Modal state survives while the confirmation is stacked on top.
@@ -106,7 +106,7 @@ function AskForNameModal({ provideName, cancel }) {
         </>
       }
     >
-      <p>Type a name, continue, then choose “Edit” to come back: your input is still here.</p>
+      <p>Type a name and continue. Choose “Edit” on the next modal to come back: your input is kept in modal state.</p>
       <input
         aria-label="Name"
         autoFocus
@@ -133,7 +133,7 @@ function ConfirmNameModal({ name, answer }) {
         </>
       }
     >
-      <p>This modal is stacked on top of the name form.</p>
+      <p>The name form underneath is unmounted now, but its modal state is kept until it resolves.</p>
     </Modal>
   );
 }
@@ -238,8 +238,11 @@ function Demo() {
         </section>
 
         <section className="card">
-          <h2>2. Stacked modals</h2>
-          <p>A modal launches another; modal state survives underneath.</p>
+          <h2>2. Persistent modal state</h2>
+          <p>
+            A form opens a confirmation on top of itself. Its input lives in <code>useModalState</code>, so it is
+            still there when you go back, although the form was unmounted in the meantime.
+          </p>
           <button onClick={() => launchModal(AskForNameModal, { provideName: setName, cancel: () => {} })}>
             Open
           </button>
