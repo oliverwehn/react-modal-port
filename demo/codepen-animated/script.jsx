@@ -3,21 +3,29 @@
 // React is imported because Babel compiles JSX to React.createElement().
 import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ModalPort, ModalProvider, useModal } from 'react-modal-port';
+import { ModalPort, ModalProvider, useModal, useModalStack, useModalState } from 'react-modal-port';
 
 /* ---------------------------------------------------------------------------
  * How the animations work
  *
  * Enter: every modal remounts when it becomes the top of the stack, so a CSS
- * animation on `.modal` plays each time (see the CSS panel).
+ * animation plays each time (see the CSS panel). Each modal remembers in its
+ * modal state whether it has been shown before, so it can tell a fresh launch
+ * (push forward) from coming back after the modal above it closed (reveal).
  *
  * Exit: a modal stays open until its resolver settles. `useAnimatedModal`
  * wraps each resolver (and onDismiss) so it first plays the exit animation
  * and only then runs, so the library removes the modal after the animation.
+ *
+ * Depth: modals below the top one are not mounted, so the top modal draws
+ * them as a deck of "ghost" cards behind itself (useModalStack gives the size).
  * ------------------------------------------------------------------------- */
 
 const EXIT_KEYFRAMES = {
-  pop: [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(0.5rem) scale(0.96)' }],
+  pop: [
+    { opacity: 1, transform: 'none' },
+    { opacity: 0, transform: 'translateY(3rem) scale(0.96)' },
+  ],
   drawer: [{ transform: 'none' }, { transform: 'translateX(100%)' }],
   sheet: [{ transform: 'none' }, { transform: 'translateY(100%)' }],
 };
@@ -28,7 +36,7 @@ async function playExit(modalId) {
   if (!dialog || dialog.dataset.modalId !== String(modalId)) return;
   const modal = dialog.querySelector('.modal');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const timing = { duration: reduced ? 1 : 200, easing: 'ease-in', fill: 'forwards' };
+  const timing = { duration: reduced ? 1 : 240, easing: 'cubic-bezier(0.4, 0, 1, 1)', fill: 'forwards' };
   const animations = [modal.animate(EXIT_KEYFRAMES[modal.dataset.motion] ?? EXIT_KEYFRAMES.pop, timing)];
   // The last modal takes the scrim with it.
   if (dialog.dataset.stackSize === '1') {
@@ -87,16 +95,37 @@ function Backdrop({ children, onBackdropClick, modalId, stackSize }) {
   );
 }
 
+const MAX_GHOSTS = 3;
+
 function Modal({ motion = 'pop', title, children, actions }) {
   const ref = useRef(null);
+  const depth = Math.min(useModalStack().length - 1, MAX_GHOSTS);
+
+  // Modal state outlives the component while it is covered, so `shown` tells a
+  // fresh launch apart from returning to this modal. Read it once, on mount.
+  const [state, setState] = useModalState();
+  const [returning] = useState(() => state?.shown === true);
   useEffect(() => {
-    ref.current.querySelector('button')?.focus();
+    if (!returning) setState((prev) => ({ ...prev, shown: true }));
+  }, [returning, setState]);
+
+  useEffect(() => {
+    // preventScroll: the modal starts off-screen (translated) while it animates
+    // in; a plain focus() would scroll the dialog to it and cancel the motion.
+    ref.current.querySelector('button')?.focus({ preventScroll: true });
   }, []);
+
   return (
-    <div className="modal" data-motion={motion} ref={ref}>
-      <h2 id="modal-title">{title}</h2>
-      {children}
-      <div className="actions">{actions}</div>
+    <div className="frame" data-motion={motion} data-enter={returning ? 'back' : 'forward'}>
+      {/* Deepest ghost first, so nearer ones paint on top. */}
+      {Array.from({ length: depth }, (_, index) => depth - index).map((level) => (
+        <div key={level} className="ghost" style={{ '--level': level }} aria-hidden="true" />
+      ))}
+      <div className="modal" data-motion={motion} ref={ref}>
+        <h2 id="modal-title">{title}</h2>
+        {children}
+        <div className="actions">{actions}</div>
+      </div>
     </div>
   );
 }
@@ -138,7 +167,10 @@ function StepModal({ step, done }) {
         </>
       }
     >
-      <p>Open another step on top, then close it: it animates out and this one animates back in.</p>
+      <p>
+        Open another step: this card recedes into the stack behind it. Close it again and this one comes
+        back to the front.
+      </p>
     </Modal>
   );
 }
@@ -181,7 +213,7 @@ function Demo() {
         </section>
         <section className="card">
           <h2>Stacked</h2>
-          <p>Each modal animates in on top; closing one reveals the previous with its own animation.</p>
+          <p>New modals push the current one back into a deck; closing one brings the previous back to the front.</p>
           <button onClick={() => launch(StepModal, { done: () => setLog('Stack closed') }, { step: 1 })}>Open</button>
         </section>
       </div>

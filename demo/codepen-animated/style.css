@@ -7,8 +7,9 @@
   --accent-text: #ffffff;
   --border: #dedcd6;
   --scrim: rgb(20 20 24 / 0.55);
-  --enter: 260ms;
-  --ease-out: cubic-bezier(0.2, 0.9, 0.3, 1.2);
+  --enter: 340ms;
+  --ease-out: cubic-bezier(0.2, 0.9, 0.3, 1.15);
+  --ease-slide: cubic-bezier(0.2, 0.8, 0.2, 1);
   color-scheme: light dark;
 }
 
@@ -74,7 +75,9 @@ dialog.backdrop {
   height: 100%;
   display: grid;
   place-items: center;
-  overflow: hidden;
+  /* clip, not hidden: hidden still lets focus() scroll the dialog, which would
+     cancel the slide-in of a drawer or sheet that starts off-screen. */
+  overflow: clip;
 }
 dialog.backdrop:not([open]) { display: none; }
 dialog.backdrop::backdrop { background: transparent; }
@@ -100,37 +103,94 @@ dialog.backdrop::backdrop { background: transparent; }
   padding: 0.25rem 0.75rem;
 }
 
-.modal {
-  position: relative; /* above the scrim */
-  width: min(26rem, calc(100% - 2rem));
-  background: var(--surface);
-  color: var(--text);
-  border-radius: 0.75rem;
-  padding: 1.5rem;
-  box-shadow: 0 1.5rem 3rem rgb(0 0 0 / 0.25);
-}
 .modal p { color: var(--muted); }
 .modal .actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1.25rem; }
 
-/* Enter animations run on mount; every modal remounts, so each one animates in. */
-.modal[data-motion="pop"] { animation: pop-in var(--enter) var(--ease-out) both; }
+/* A frame holds the modal plus the ghost cards of the modals underneath it.
+   All of them share one grid cell, so the ghosts take the modal's size. */
+.frame {
+  position: relative; /* above the scrim */
+  display: grid;
+  width: min(26rem, calc(100% - 2rem));
+}
+.frame > * { grid-area: 1 / 1; }
 
-.modal[data-motion="drawer"] {
+.modal,
+.ghost {
+  background: var(--surface);
+  border-radius: 0.75rem;
+  box-shadow: 0 1.5rem 3rem rgb(0 0 0 / 0.25);
+}
+.modal { color: var(--text); padding: 1.5rem; }
+
+/* Ghost at depth --level: a little higher, smaller and dimmer per level. */
+.ghost {
+  --y: calc(var(--level) * -0.9rem);
+  --s: calc(1 - var(--level) * 0.05);
+  --b: calc(1 - var(--level) * 0.1);
+  transform: translateY(var(--y)) scale(var(--s));
+  filter: brightness(var(--b));
+  transform-origin: top center;
+}
+
+/* --- Dialog ("pop") ---------------------------------------------------------
+   forward: the new modal rises in from below, every ghost sinks one level deeper
+            (the nearest one starts where the previous modal was).
+   back:    the returning modal rises out of the first ghost slot, the remaining
+            ghosts move one level closer. */
+.frame[data-motion="pop"][data-enter="forward"] > .modal {
+  animation: push-in var(--enter) var(--ease-out) both;
+}
+.frame[data-motion="pop"][data-enter="forward"] > .ghost {
+  animation: deepen var(--enter) var(--ease-slide) both;
+}
+.frame[data-motion="pop"][data-enter="back"] > .modal {
+  transform-origin: top center;
+  animation: reveal var(--enter) var(--ease-slide) both;
+}
+.frame[data-motion="pop"][data-enter="back"] > .ghost {
+  animation: surface var(--enter) var(--ease-slide) both;
+}
+
+@keyframes push-in {
+  from { opacity: 0; transform: translateY(3rem) scale(0.96); }
+}
+@keyframes deepen {
+  from {
+    transform: translateY(calc((var(--level) - 1) * -0.9rem)) scale(calc(1 - (var(--level) - 1) * 0.05));
+    filter: brightness(calc(1 - (var(--level) - 1) * 0.1));
+  }
+}
+@keyframes reveal {
+  from { transform: translateY(-0.9rem) scale(0.95); filter: brightness(0.9); }
+}
+@keyframes surface {
+  from {
+    transform: translateY(calc((var(--level) + 1) * -0.9rem)) scale(calc(1 - (var(--level) + 1) * 0.05));
+    filter: brightness(calc(1 - (var(--level) + 1) * 0.1));
+  }
+}
+
+/* --- Drawer and bottom sheet ------------------------------------------------ */
+.frame[data-motion="drawer"] {
   justify-self: end;
   align-self: stretch;
   width: min(24rem, 100%);
+}
+.frame[data-motion="drawer"] > .modal {
   border-radius: 0.75rem 0 0 0.75rem;
-  animation: slide-in var(--enter) cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation: slide-in var(--enter) var(--ease-slide) both;
 }
 
-.modal[data-motion="sheet"] {
+.frame[data-motion="sheet"] {
   align-self: end;
   width: min(36rem, 100%);
+}
+.frame[data-motion="sheet"] > .modal {
   border-radius: 1rem 1rem 0 0;
-  animation: rise-in var(--enter) cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation: rise-in var(--enter) var(--ease-slide) both;
 }
 
 @keyframes fade-in { from { opacity: 0; } }
-@keyframes pop-in { from { opacity: 0; transform: translateY(0.75rem) scale(0.96); } }
 @keyframes slide-in { from { transform: translateX(100%); } }
 @keyframes rise-in { from { transform: translateY(100%); } }
