@@ -175,6 +175,27 @@ function StepModal({ step, done }) {
   );
 }
 
+/* --- Links to the package -------------------------------------------------- */
+const LINKS = [
+  ['npm', 'https://www.npmjs.com/package/react-modal-port'],
+  ['GitHub', 'https://github.com/oliverwehn/react-modal-port'],
+  ['Docs', 'https://github.com/oliverwehn/react-modal-port#animating-modals-in-and-out'],
+];
+
+function PackageLinks() {
+  return (
+    <nav className="links" aria-label="react-modal-port">
+      <code>npm install react-modal-port</code>
+      {LINKS.map(([label, href]) => (
+        // target="_blank": npm and GitHub refuse to load inside CodePen's preview iframe.
+        <a key={label} href={href} target="_blank" rel="noopener noreferrer">
+          {label} ↗
+        </a>
+      ))}
+    </nav>
+  );
+}
+
 /* --- Page ------------------------------------------------------------------- */
 function Demo() {
   const launch = useAnimatedModal();
@@ -195,6 +216,7 @@ function Demo() {
         react-modal-port keeps a modal mounted until its resolver settles, so exit animations need no extra
         API: await the animation, then resolve.
       </p>
+      <PackageLinks />
       <div className="cards">
         <section className="card">
           <h2>Dialog</h2>

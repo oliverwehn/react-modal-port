@@ -183,6 +183,27 @@ function NoticeModal({ seconds, ok }) {
   );
 }
 
+/* --- Links to the package -------------------------------------------------- */
+const LINKS = [
+  ['npm', 'https://www.npmjs.com/package/react-modal-port'],
+  ['GitHub', 'https://github.com/oliverwehn/react-modal-port'],
+  ['Docs', 'https://github.com/oliverwehn/react-modal-port#readme'],
+];
+
+function PackageLinks() {
+  return (
+    <nav className="links" aria-label="react-modal-port">
+      <code>npm install react-modal-port</code>
+      {LINKS.map(([label, href]) => (
+        // target="_blank": npm and GitHub refuse to load inside CodePen's preview iframe.
+        <a key={label} href={href} target="_blank" rel="noopener noreferrer">
+          {label} ↗
+        </a>
+      ))}
+    </nav>
+  );
+}
+
 /* --- Page ----------------------------------------------------------------- */
 function Demo() {
   const launchModal = useModal();
@@ -195,6 +216,7 @@ function Demo() {
     <main>
       <h1>react-modal-port</h1>
       <p className="lead">Launch modals from any component and render them in one place.</p>
+      <PackageLinks />
 
       <div className="cards">
         <section className="card">

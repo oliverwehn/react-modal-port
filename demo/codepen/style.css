@@ -48,6 +48,24 @@ h2 { margin: 0 0 0.5rem; font-size: 1.15rem; }
 p { margin: 0 0 1rem; }
 .lead { color: var(--muted); margin-bottom: 2rem; }
 
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin: -1rem 0 2rem;
+  font-size: 0.9rem;
+}
+.links code {
+  font: 0.85rem/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  padding: 0.25rem 0.5rem;
+  user-select: all;
+}
+.links a { color: var(--accent); text-underline-offset: 0.2em; }
+
 .cards { display: grid; gap: 1rem; }
 
 .card {
