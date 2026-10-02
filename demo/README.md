@@ -4,7 +4,7 @@ Two demos for the **CodePen 2.0 editor**. Each folder is a complete pen:
 
 | Folder | Shows |
 | --- | --- |
-| `codepen/` | Confirm with dismiss, persistent modal state across a nested modal, async resolver with retry, programmatic close |
+| `codepen/` | Confirm with dismiss, modal state handed on to a nested modal and kept while it's covered, async resolver with retry, programmatic close |
 | `codepen-animated/` | Enter and exit animations: dialog, drawer and bottom sheet, plus stacked modals shown as a deck with direction-aware motion |
 
 Each pen has four files:

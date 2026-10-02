@@ -78,18 +78,21 @@ function ConfirmModal({ question, confirm, cancel }) {
   );
 }
 
-/* --- 2. Modal state that survives a nested modal ----------------------- */
+/* --- 2. Modal state: kept while covered, handed on to the next modal ---- */
 function AskForNameModal({ provideName, cancel }) {
   const launchModal = useModal();
-  // Modal state survives while the confirmation is stacked on top.
+  // The form's input lives in modal state: it outlives the component while the
+  // confirmation covers it, and it is what the confirmation gets to work with.
   const [state, setState] = useModalState();
   const name = state?.name ?? '';
 
   const next = () => {
     launchModal(
       ConfirmNameModal,
-      // Resolving the confirmation also resolves this modal.
+      // "Yes" resolves the confirmation and, through provideName, this form too,
+      // with the value from its modal state. "Edit" resolves only the confirmation.
       { answer: (ok) => ok && provideName(name) },
+      // Hand the current modal state on to the next modal.
       { name },
     );
   };
@@ -106,7 +109,7 @@ function AskForNameModal({ provideName, cancel }) {
         </>
       }
     >
-      <p>Type a name and continue. Choose “Edit” on the next modal to come back: your input is kept in modal state.</p>
+      <p>Type a name and continue. The next modal receives it from this form’s modal state.</p>
       <input
         aria-label="Name"
         autoFocus
@@ -133,7 +136,10 @@ function ConfirmNameModal({ name, answer }) {
         </>
       }
     >
-      <p>The name form underneath is unmounted now, but its modal state is kept until it resolves.</p>
+      <p>
+        This name was handed over from the form’s modal state. “Yes” resolves both modals with it. “Edit”
+        takes you back to the form, which was unmounted meanwhile but still has your input.
+      </p>
     </Modal>
   );
 }
@@ -238,10 +244,11 @@ function Demo() {
         </section>
 
         <section className="card">
-          <h2>2. Persistent modal state</h2>
+          <h2>2. Modal state across modals</h2>
           <p>
-            A form opens a confirmation on top of itself. Its input lives in <code>useModalState</code>, so it is
-            still there when you go back, although the form was unmounted in the meantime.
+            A form keeps its input in <code>useModalState</code> and hands it to a confirmation opened on top.
+            Confirming resolves both modals with that value; going back finds the input intact, although the
+            form was unmounted in between.
           </p>
           <button onClick={() => launchModal(AskForNameModal, { provideName: setName, cancel: () => {} })}>
             Open
