@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.2
+
+Documentation only; the library code is unchanged.
+
+- README rewritten: it leads with the headless approach (you own markup, styles, accessibility and animation; the library handles launching, stacking, resolving and per-modal state), adds a "How it works" overview, a single quick start, an `await confirm()` recipe, a `launchModal` and types reference, and a Next.js section. Every snippet type-checks.
+- The `<dialog>` and animation recipes now mention `overflow: clip` and `focus({ preventScroll: true })`, which keep slide-in animations from being cancelled.
+- Better npm description and keywords.
+
 ## 1.0.1
 
 Documentation only; the library code is unchanged.
