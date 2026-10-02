@@ -10,7 +10,7 @@ Launch modals from any React component, render them in one place, and have TypeS
 
 **Requires React 19.** Upgrading from 0.x? See [MIGRATION.md](./MIGRATION.md).
 
-**Demos on CodePen:** [Usage examples](https://codepen.io/editor/oliverwehn/pen/018e18fb-0f15-724c-8fdf-4f47406f37d9) (dismissible confirm, modal state across modals, async resolvers, programmatic close) · [Animation examples](https://codepen.io/editor/oliverwehn/pen/01a0fb4d-2c07-7c34-af66-1ac02a634b22) (dialog, drawer, bottom sheet, stacked modals). Sources in [`demo/`](./demo).
+**Demos on CodePen:** [Usage examples](https://codepen.io/oliverwehn/pen/018e18fb-0f15-724c-8fdf-4f47406f37d9) (dismissible confirm, modal state across modals, async resolvers, programmatic close) · [Animation examples](https://codepen.io/oliverwehn/pen/01a0fb4d-2c07-7c34-af66-1ac02a634b22) (dialog, drawer, bottom sheet, stacked modals). Sources in [`demo/`](./demo).
 
 ---
 
@@ -289,7 +289,7 @@ export function useAnimatedModal(): LaunchModal {
 }
 ```
 
-The backdrop receives `modalId` and `stackSize`, so `playExit` can check that the modal is the one on screen, and fade the backdrop out too when it is the last one. The [animation examples](https://codepen.io/editor/oliverwehn/pen/01a0fb4d-2c07-7c34-af66-1ac02a634b22) have a complete version using the Web Animations API, with drawer and bottom-sheet variants and support for `prefers-reduced-motion` (source in [`demo/codepen-animated/`](./demo/codepen-animated)).
+The backdrop receives `modalId` and `stackSize`, so `playExit` can check that the modal is the one on screen, and fade the backdrop out too when it is the last one. The [animation examples](https://codepen.io/oliverwehn/pen/01a0fb4d-2c07-7c34-af66-1ac02a634b22) have a complete version using the Web Animations API, with drawer and bottom-sheet variants and support for `prefers-reduced-motion` (source in [`demo/codepen-animated/`](./demo/codepen-animated)).
 
 ## API reference
 

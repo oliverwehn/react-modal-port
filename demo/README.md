@@ -4,8 +4,8 @@ Two demos for the **CodePen 2.0 editor**. Each folder is a complete pen:
 
 | Folder | Pen | Shows |
 | --- | --- | --- |
-| `codepen/` | [Usage examples](https://codepen.io/editor/oliverwehn/pen/018e18fb-0f15-724c-8fdf-4f47406f37d9) | Confirm with dismiss, modal state handed on to a nested modal and kept while it's covered, async resolver with retry, programmatic close |
-| `codepen-animated/` | [Animation examples](https://codepen.io/editor/oliverwehn/pen/01a0fb4d-2c07-7c34-af66-1ac02a634b22) | Enter and exit animations: dialog, drawer and bottom sheet, plus stacked modals shown as a deck with direction-aware motion |
+| `codepen/` | [Usage examples](https://codepen.io/oliverwehn/pen/018e18fb-0f15-724c-8fdf-4f47406f37d9) | Confirm with dismiss, modal state handed on to a nested modal and kept while it's covered, async resolver with retry, programmatic close |
+| `codepen-animated/` | [Animation examples](https://codepen.io/oliverwehn/pen/01a0fb4d-2c07-7c34-af66-1ac02a634b22) | Enter and exit animations: dialog, drawer and bottom sheet, plus stacked modals shown as a deck with direction-aware motion |
 
 Each pen has four files:
 
